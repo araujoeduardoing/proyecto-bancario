@@ -1,0 +1,26 @@
+<div class="shell-container">
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <span class="brand-icon">🏦</span>
+      <span class="brand-text">{{ title() }}</span>
+    </div>
+
+    <div class="sidebar-menu">
+      <button
+        *ngFor="let item of navigationItems"
+        class="sidebar-item"
+        [class.active]="isCurrentRoute(item.route)"
+        (click)="navigateTo(item.route)"
+      >
+        <span class="sidebar-icon">{{ item.icon }}</span>
+        <span class="sidebar-text">{{ item.name }}</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
