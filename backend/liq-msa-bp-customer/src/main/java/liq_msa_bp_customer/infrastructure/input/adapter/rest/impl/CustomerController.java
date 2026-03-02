@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 @RequestMapping("/business/retail/v1/customers")
 @Tag(name = "Customer", description = "Customer management API")
 public class CustomerController {
@@ -47,10 +49,10 @@ public class CustomerController {
     }
     @PutMapping("/{id:[0-9]+}")
     @Operation(summary = "Update customer")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id,
+    public ResponseEntity<Customer> updateCustomer(@PathVariable String id,
                                                    @Valid @RequestBody CustomerRequest request) {
         Customer customer = customerMapper.customerRequestToCustomerDomain(request);
-        customer.setCustomerId(id);
+        customer.setClientId(id);
         Customer updatedCustomer = customerService.save(customer);
         return ResponseEntity.ok(updatedCustomer);
     }

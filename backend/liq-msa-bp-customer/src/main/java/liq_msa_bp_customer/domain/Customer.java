@@ -5,11 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Customer {
-    private Long customerId;
+public class Customer extends Person {
+    private String clientId;
     private String password;
-    private String status;
-
-
-
+    private Boolean status;
 }

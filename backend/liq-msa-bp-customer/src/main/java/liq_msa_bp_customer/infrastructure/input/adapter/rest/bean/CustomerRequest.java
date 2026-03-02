@@ -11,53 +11,31 @@ import lombok.Setter;
 @Setter
 public class CustomerRequest {
     
-    @NotBlank(message = "Identification is required")
-    @Size(max = 20, message = "Identification must not exceed 20 characters")
-    private String identification;
+    private String clientId;
     
-    @NotBlank(message = "Type identification is required")
-    @Size(max = 10, message = "Type identification must not exceed 10 characters")
-    private String typeIdentification;
-    
-    @NotBlank(message = "First name is required")
-    @Size(max = 100, message = "First name must not exceed 100 characters")
-    private String firstName;
-
-    @NotBlank(message = "Last name is required")
-    @Size(max = 100, message = "Last name must not exceed 100 characters")
-    private String lastName;
-
-    @NotBlank(message = "Phone number is required")
-    @Size(max = 20, message = "Phone number must not exceed 20 characters")
-    private String phoneNumber;
-    
-    @Email(message = "Email should be valid")
-    @Size(max = 100, message = "Email must not exceed 100 characters")
-    private String email;
-    
-    @Size(max = 20, message = "Company must not exceed 20 characters")
-    private String idCompany;
-    
-    @Size(max = 250, message = "Address must not exceed 250 characters")
-    private String address;
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
+    private String password;
     
     private Boolean status;
-
-    public CustomerRequest() {}
-
-
-    /*
-    public Customer toDomain() {
-        Customer customer = new Customer();
-        customer.setIdentification(this.identification);
-        customer.setTypeIdentification(this.typeIdentification);
-        customer.setFirstName(this.firstName);
-        customer.setLastName(this.lastName);
-        customer.setPhoneNumber(this.phoneNumber);
-        customer.setEmail(this.email);
-        customer.setIdCompany(this.idCompany);
-        customer.setAddress(this.address);
-        customer.setStatus(this.status != null ? this.status : true);
-        return customer;
-    }*/
+    private Long personId;
+    
+    @NotBlank(message = "Name is required")
+    @Size(max = 250, message = "Name must not exceed 250 characters")
+    private String name;
+    
+    @Size(max = 100, message = "Gender must not exceed 100 characters")
+    private String gender;
+    
+    private Integer age;
+    
+    @NotBlank(message = "Identification is required")
+    @Size(max = 100, message = "Identification must not exceed 100 characters")
+    private String identification;
+    
+    @Size(max = 100, message = "Address must not exceed 100 characters")
+    private String address;
+    
+    @Size(max = 100, message = "Phone must not exceed 100 characters")
+    private String phone;
 }
