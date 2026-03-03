@@ -32,6 +32,7 @@ export class App implements OnInit {
   protected creating = signal(false);
   protected editing = signal(false);
   protected editingClientId = signal<number | null>(null);
+  protected deleting = signal<number | null>(null);
 
   protected newClient = signal<NewClient>({
     name: '',
@@ -193,5 +194,38 @@ export class App implements OnInit {
       password: '',
       status: true,
     });
+  }
+
+  deleteClient(client: Client): void {
+    if (!confirm(`¿Está seguro de eliminar al cliente "${client.name}"?`)) {
+      return;
+    }
+
+    this.deleting.set(client.clientId);
+    this.error.set(null);
+
+    this.http
+      .delete<any>(`${this.baseUrl}/customers/${client.clientId}`)
+      .subscribe({
+        next: () => {
+          this.deleting.set(null);
+          this.loadClients();
+        },
+        error: (err) => {
+          let errorMessage = 'Error al eliminar cliente';
+          if (err?.error?.message || err?.error?.detailMessage) {
+            errorMessage =
+              (err.error.message || '') +
+              (err.error.detailMessage
+                ? err.error.message
+                  ? ': ' + err.error.detailMessage
+                  : err.error.detailMessage
+                : '');
+          }
+          this.error.set(errorMessage);
+          this.deleting.set(null);
+          console.error('Error:', err);
+        },
+      });
   }
 }

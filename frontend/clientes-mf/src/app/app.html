@@ -160,7 +160,15 @@
           <td>{{ client.address }}</td>
           <td>{{ client.phone }}</td>
           <td>{{ client.status ? "Activo" : "Inactivo" }}</td>
-          <td><button (click)="editClient(client)">Editar</button></td>
+          <td>
+            <button (click)="editClient(client)">Editar</button>
+            <button
+              (click)="deleteClient(client)"
+              [disabled]="deleting() === client.clientId"
+            >
+              {{ deleting() === client.clientId ? "Borrando..." : "Borrar" }}
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
