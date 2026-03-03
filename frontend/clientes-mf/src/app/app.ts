@@ -30,6 +30,8 @@ export class App implements OnInit {
   protected searchText = signal('');
   protected showForm = signal(false);
   protected creating = signal(false);
+  protected editing = signal(false);
+  protected editingClientId = signal<number | null>(null);
 
   protected newClient = signal<NewClient>({
     name: '',
@@ -96,6 +98,11 @@ export class App implements OnInit {
 
   toggleForm(): void {
     this.showForm.set(!this.showForm());
+    if (!this.showForm()) {
+      this.editing.set(false);
+      this.editingClientId.set(null);
+      this.resetForm();
+    }
   }
 
   createClient(): void {
@@ -109,45 +116,82 @@ export class App implements OnInit {
     this.creating.set(true);
     this.error.set(null);
 
-    this.http
-      .post<any>(`${this.baseUrl}/customers/register`, client)
-      .subscribe({
-        next: () => {
-          this.creating.set(false);
-          this.showForm.set(false);
-          // Resetear formulario
-          this.newClient.set({
-            name: '',
-            gender: 'M',
-            age: 0,
-            identification: '',
-            address: '',
-            phone: '',
-            password: '',
-            status: true,
-          });
-          // Recargar lista
-          this.loadClients();
-        },
-        error: (err) => {
-          let errorMessage = 'Error al crear cliente';
-          if (err?.error?.message || err?.error?.detailMessage) {
-            errorMessage =
-              (err.error.message || '') +
-              (err.error.detailMessage
-                ? err.error.message
-                  ? ': ' + err.error.detailMessage
-                  : err.error.detailMessage
-                : '');
-          }
-          this.error.set(errorMessage);
-          this.creating.set(false);
-          console.error('Error:', err);
-        },
-      });
+    const request = this.editing()
+      ? this.http.put<any>(
+          `${this.baseUrl}/customers/${this.editingClientId()}`,
+          client,
+        )
+      : this.http.post<any>(`${this.baseUrl}/customers/register`, client);
+
+    // Debug logs
+    if (this.editing()) {
+      console.log(
+        'PUT URL:',
+        `${this.baseUrl}/customers/${this.editingClientId()}`,
+      );
+      console.log('PUT Data:', client);
+      console.log('Editing Client ID:', this.editingClientId());
+    }
+
+    request.subscribe({
+      next: () => {
+        this.creating.set(false);
+        this.showForm.set(false);
+        this.editing.set(false);
+        this.editingClientId.set(null);
+        this.resetForm();
+        this.loadClients();
+      },
+      error: (err) => {
+        let errorMessage = this.editing()
+          ? 'Error al actualizar cliente'
+          : 'Error al crear cliente';
+        if (err?.error?.message || err?.error?.detailMessage) {
+          errorMessage =
+            (err.error.message || '') +
+            (err.error.detailMessage
+              ? err.error.message
+                ? ': ' + err.error.detailMessage
+                : err.error.detailMessage
+              : '');
+        }
+        this.error.set(errorMessage);
+        this.creating.set(false);
+        console.error('Error:', err);
+      },
+    });
   }
 
   updateClientField(field: keyof NewClient, value: any): void {
     this.newClient.update((client) => ({ ...client, [field]: value }));
+  }
+
+  editClient(client: Client): void {
+    this.editing.set(true);
+    this.editingClientId.set(client.clientId);
+    this.newClient.set({
+      name: client.name,
+      gender: client.gender,
+      age: client.age,
+      identification: client.identification,
+      address: client.address,
+      phone: client.phone,
+      password: client.password,
+      status: client.status,
+    });
+    this.showForm.set(true);
+  }
+
+  private resetForm(): void {
+    this.newClient.set({
+      name: '',
+      gender: 'M',
+      age: 0,
+      identification: '',
+      address: '',
+      phone: '',
+      password: '',
+      status: true,
+    });
   }
 }

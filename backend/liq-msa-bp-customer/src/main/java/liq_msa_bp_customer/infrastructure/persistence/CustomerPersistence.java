@@ -7,6 +7,7 @@ import liq_msa_bp_customer.infrastructure.repository.entity.CustomerEntity;
 import liq_msa_bp_customer.infrastructure.repository.mapper.CustomerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,12 +26,14 @@ public class CustomerPersistence implements CustomerRepository {
 
     @Override
     public Optional<Customer> findById(Long id) {
-        return jpaRepository.findById(id)
+        return jpaRepository.findByClientId(id)
                 .map(customerMapper::customerEntityToCustomerDomain);
     }
+    
     @Override
+    @Transactional
     public void deleteById(Long id) {
-        jpaRepository.deleteById(id);
+        jpaRepository.deleteByClientId(id);
     }
 
     @Override

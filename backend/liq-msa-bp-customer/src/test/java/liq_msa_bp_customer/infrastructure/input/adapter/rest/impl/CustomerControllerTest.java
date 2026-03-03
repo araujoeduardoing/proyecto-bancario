@@ -138,12 +138,17 @@ class CustomerControllerTest {
     void updateCustomer_ShouldReturnUpdatedCustomer_WhenValidRequestProvided() throws Exception {
         // Given
         Long customerId = 1L;
+        
+        // Mock del cliente existente
+        when(customerService.findById(customerId)).thenReturn(Optional.of(testCustomer));
+        
+        // Mock del cliente actualizado
         Customer updatedCustomer = new Customer();
         updatedCustomer.setClientId(customerId);
+        updatedCustomer.setPersonId(testCustomer.getPersonId()); // Mantener personId
         updatedCustomer.setName("Juan Pérez Actualizado");
         updatedCustomer.setIdentification("1234567890");
-
-        when(customerMapper.customerRequestToCustomerDomain(any(CustomerRequest.class))).thenReturn(testCustomer);
+        
         when(customerService.save(any(Customer.class))).thenReturn(updatedCustomer);
 
         // When & Then
@@ -155,7 +160,7 @@ class CustomerControllerTest {
                 .andExpect(jsonPath("$.clientId").value(customerId))
                 .andExpect(jsonPath("$.name").value("Juan Pérez Actualizado"));
 
-        verify(customerMapper, times(1)).customerRequestToCustomerDomain(any(CustomerRequest.class));
+        verify(customerService, times(1)).findById(customerId);
         verify(customerService, times(1)).save(any(Customer.class));
     }
 
@@ -173,7 +178,23 @@ class CustomerControllerTest {
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
 
-        verify(customerMapper, never()).customerRequestToCustomerDomain(any(CustomerRequest.class));
+        verify(customerService, never()).findById(customerId);
+        verify(customerService, never()).save(any(Customer.class));
+    }
+
+    @Test
+    void updateCustomer_ShouldReturnNotFound_WhenCustomerDoesNotExist() throws Exception {
+        // Given
+        Long customerId = 999L;
+        when(customerService.findById(customerId)).thenReturn(Optional.empty());
+
+        // When & Then
+        mockMvc.perform(put("/business/retail/v1/customers/{id}", customerId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testRequest)))
+                .andExpect(status().isNotFound());
+
+        verify(customerService, times(1)).findById(customerId);
         verify(customerService, never()).save(any(Customer.class));
     }
 

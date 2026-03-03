@@ -5,11 +5,13 @@
   <div *ngIf="error()">{{ error() }}</div>
 
   <button (click)="toggleForm()">
-    {{ showForm() ? "Cancelar" : "Crear Nuevo" }}
+    {{
+      showForm() ? "Cancelar" : editing() ? "Cancelar Edición" : "Crear Nuevo"
+    }}
   </button>
 
   <div *ngIf="showForm()">
-    <h3>Crear Nuevo Cliente</h3>
+    <h3>{{ editing() ? "Editar Cliente" : "Crear Nuevo Cliente" }}</h3>
     <table>
       <tr>
         <td>Nombre*:</td>
@@ -107,7 +109,15 @@
     </table>
     <br />
     <button (click)="createClient()" [disabled]="creating()">
-      {{ creating() ? "Creando..." : "Crear Cliente" }}
+      {{
+        creating()
+          ? editing()
+            ? "Actualizando..."
+            : "Creando..."
+          : editing()
+            ? "Actualizar Cliente"
+            : "Crear Cliente"
+      }}
     </button>
   </div>
 
@@ -137,6 +147,7 @@
           <th>Dirección</th>
           <th>Teléfono</th>
           <th>Estado</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -149,6 +160,7 @@
           <td>{{ client.address }}</td>
           <td>{{ client.phone }}</td>
           <td>{{ client.status ? "Activo" : "Inactivo" }}</td>
+          <td><button (click)="editClient(client)">Editar</button></td>
         </tr>
       </tbody>
     </table>

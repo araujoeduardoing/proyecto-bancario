@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "customer")
 public class CustomerEntity extends PersonEntity {
 
-    @Column(name = "client_id", unique = true, nullable = false, insertable = false, updatable = false)
+    @Column(name = "client_id", unique = true, nullable = false)
     private Long clientId;
 
     @Column(name = "password", length = 100, nullable = false)
