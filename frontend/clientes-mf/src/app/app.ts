@@ -73,7 +73,17 @@ export class App implements OnInit {
         this.loading.set(false);
       },
       error: (err) => {
-        this.error.set('Error al conectar con el servidor');
+        let errorMessage = 'Error al conectar con el servidor';
+        if (err?.error?.message || err?.error?.detailMessage) {
+          errorMessage =
+            (err.error.message || '') +
+            (err.error.detailMessage
+              ? err.error.message
+                ? ': ' + err.error.detailMessage
+                : err.error.detailMessage
+              : '');
+        }
+        this.error.set(errorMessage);
         this.loading.set(false);
         console.error('Error:', err);
       },
@@ -120,7 +130,17 @@ export class App implements OnInit {
           this.loadClients();
         },
         error: (err) => {
-          this.error.set('Error al crear cliente');
+          let errorMessage = 'Error al crear cliente';
+          if (err?.error?.message || err?.error?.detailMessage) {
+            errorMessage =
+              (err.error.message || '') +
+              (err.error.detailMessage
+                ? err.error.message
+                  ? ': ' + err.error.detailMessage
+                  : err.error.detailMessage
+                : '');
+          }
+          this.error.set(errorMessage);
           this.creating.set(false);
           console.error('Error:', err);
         },

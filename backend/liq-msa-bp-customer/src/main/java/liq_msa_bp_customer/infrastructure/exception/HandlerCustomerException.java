@@ -56,7 +56,7 @@ public class HandlerCustomerException {
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("Validation Failed")
-                .message("Request validation failed")
+                .message("La solicitud fallo.")
                 .detailMessage(validationErrors)
                 .dateTimeException(formatDateTime)
                 .build();
