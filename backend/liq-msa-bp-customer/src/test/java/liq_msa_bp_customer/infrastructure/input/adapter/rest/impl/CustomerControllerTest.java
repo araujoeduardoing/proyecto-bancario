@@ -3,6 +3,7 @@ package liq_msa_bp_customer.infrastructure.input.adapter.rest.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import liq_msa_bp_customer.application.input.port.CustomerService;
 import liq_msa_bp_customer.domain.Customer;
+import liq_msa_bp_customer.infrastructure.exception.CustomerNotFoundException;
 import liq_msa_bp_customer.infrastructure.input.adapter.rest.bean.CustomerRequest;
 import liq_msa_bp_customer.infrastructure.repository.mapper.CustomerMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,11 +69,9 @@ class CustomerControllerTest {
 
     @Test
     void createCustomer_ShouldReturnCreated_WhenValidRequestProvided() throws Exception {
-        // Given
         when(customerMapper.customerRequestToCustomerDomain(any(CustomerRequest.class))).thenReturn(testCustomer);
         when(customerService.save(any(Customer.class))).thenReturn(testCustomer);
 
-        // When & Then
         mockMvc.perform(post("/business/retail/v1/customers/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testRequest)))
@@ -89,12 +88,10 @@ class CustomerControllerTest {
 
     @Test
     void createCustomer_ShouldReturnBadRequest_WhenInvalidRequestProvided() throws Exception {
-        // Given - Request with missing required fields
         CustomerRequest invalidRequest = new CustomerRequest();
         invalidRequest.setName(""); // Invalid: empty name
         invalidRequest.setPassword("123"); // Invalid: password too short
 
-        // When & Then
         mockMvc.perform(post("/business/retail/v1/customers/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
@@ -106,11 +103,9 @@ class CustomerControllerTest {
 
     @Test
     void getCustomerById_ShouldReturnCustomer_WhenCustomerExists() throws Exception {
-        // Given
         Long customerId = 1L;
         when(customerService.findById(customerId)).thenReturn(Optional.of(testCustomer));
 
-        // When & Then
         mockMvc.perform(get("/business/retail/v1/customers/{id}", customerId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -122,12 +117,10 @@ class CustomerControllerTest {
     }
 
     @Test
-    void getCustomerById_ShouldReturnNotFound_WhenCustomerDoesNotExist() throws Exception {
-        // Given
+    void getCustomerById_ShouldThrowException_WhenCustomerDoesNotExist() throws Exception {
         Long customerId = 999L;
         when(customerService.findById(customerId)).thenReturn(Optional.empty());
 
-        // When & Then
         mockMvc.perform(get("/business/retail/v1/customers/{id}", customerId))
                 .andExpect(status().isNotFound());
 
@@ -136,13 +129,10 @@ class CustomerControllerTest {
 
     @Test
     void updateCustomer_ShouldReturnUpdatedCustomer_WhenValidRequestProvided() throws Exception {
-        // Given
         Long customerId = 1L;
         
-        // Mock del cliente existente
         when(customerService.findById(customerId)).thenReturn(Optional.of(testCustomer));
         
-        // Mock del cliente actualizado
         Customer updatedCustomer = new Customer();
         updatedCustomer.setClientId(customerId);
         updatedCustomer.setPersonId(testCustomer.getPersonId()); // Mantener personId
@@ -151,7 +141,6 @@ class CustomerControllerTest {
         
         when(customerService.save(any(Customer.class))).thenReturn(updatedCustomer);
 
-        // When & Then
         mockMvc.perform(put("/business/retail/v1/customers/{id}", customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testRequest)))
@@ -166,13 +155,11 @@ class CustomerControllerTest {
 
     @Test
     void updateCustomer_ShouldReturnBadRequest_WhenInvalidRequestProvided() throws Exception {
-        // Given
         Long customerId = 1L;
         CustomerRequest invalidRequest = new CustomerRequest();
         invalidRequest.setName(""); // Invalid: empty name
         invalidRequest.setPassword("123"); // Invalid: password too short
 
-        // When & Then
         mockMvc.perform(put("/business/retail/v1/customers/{id}", customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
@@ -183,12 +170,10 @@ class CustomerControllerTest {
     }
 
     @Test
-    void updateCustomer_ShouldReturnNotFound_WhenCustomerDoesNotExist() throws Exception {
-        // Given
+    void updateCustomer_ShouldThrowException_WhenCustomerDoesNotExist() throws Exception {
         Long customerId = 999L;
         when(customerService.findById(customerId)).thenReturn(Optional.empty());
 
-        // When & Then
         mockMvc.perform(put("/business/retail/v1/customers/{id}", customerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testRequest)))
@@ -200,11 +185,9 @@ class CustomerControllerTest {
 
     @Test
     void deleteCustomer_ShouldReturnNoContent_WhenCustomerExists() throws Exception {
-        // Given
         Long customerId = 1L;
         doNothing().when(customerService).deleteById(customerId);
 
-        // When & Then
         mockMvc.perform(delete("/business/retail/v1/customers/{id}", customerId))
                 .andExpect(status().isNoContent());
 
@@ -213,12 +196,10 @@ class CustomerControllerTest {
 
     @Test
     void deleteCustomer_ShouldHandleException_WhenCustomerDoesNotExist() throws Exception {
-        // Given
         Long customerId = 999L;
         doThrow(new IllegalArgumentException("Cliente no encontrado con ID: " + customerId))
                 .when(customerService).deleteById(customerId);
 
-        // When & Then
         mockMvc.perform(delete("/business/retail/v1/customers/{id}", customerId))
                 .andExpect(status().isInternalServerError());
 
@@ -227,7 +208,6 @@ class CustomerControllerTest {
 
     @Test
     void getAllCustomers_ShouldReturnCustomerList_WhenCustomersExist() throws Exception {
-        // Given
         Customer customer2 = new Customer();
         customer2.setClientId(2L);
         customer2.setPersonId(2L);
@@ -238,7 +218,6 @@ class CustomerControllerTest {
         List<Customer> customerList = Arrays.asList(testCustomer, customer2);
         when(customerService.findAll()).thenReturn(customerList);
 
-        // When & Then
         mockMvc.perform(get("/business/retail/v1/customers/all"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -254,10 +233,8 @@ class CustomerControllerTest {
 
     @Test
     void getAllCustomers_ShouldReturnEmptyList_WhenNoCustomersExist() throws Exception {
-        // Given
         when(customerService.findAll()).thenReturn(Arrays.asList());
 
-        // When & Then
         mockMvc.perform(get("/business/retail/v1/customers/all"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
