@@ -5,6 +5,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Client } from './models/client.model';
 
+interface NewClient {
+  name: string;
+  gender: string;
+  age: number;
+  identification: string;
+  address: string;
+  phone: string;
+  password: string;
+  status: boolean;
+}
+
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, CommonModule, FormsModule],
@@ -17,6 +28,19 @@ export class App implements OnInit {
   protected loading = signal(false);
   protected error = signal<string | null>(null);
   protected searchText = signal('');
+  protected showForm = signal(false);
+  protected creating = signal(false);
+
+  protected newClient = signal<NewClient>({
+    name: '',
+    gender: 'M',
+    age: 0,
+    identification: '',
+    address: '',
+    phone: '',
+    password: '',
+    status: true,
+  });
 
   protected filteredClients = computed(() => {
     const search = this.searchText().toLowerCase();
@@ -58,5 +82,52 @@ export class App implements OnInit {
 
   onSearchChange(value: string): void {
     this.searchText.set(value);
+  }
+
+  toggleForm(): void {
+    this.showForm.set(!this.showForm());
+  }
+
+  createClient(): void {
+    const client = this.newClient();
+
+    if (!client.name || !client.identification || !client.password) {
+      this.error.set('Nombre, identificación y contraseña son obligatorios');
+      return;
+    }
+
+    this.creating.set(true);
+    this.error.set(null);
+
+    this.http
+      .post<any>(`${this.baseUrl}/customers/register`, client)
+      .subscribe({
+        next: () => {
+          this.creating.set(false);
+          this.showForm.set(false);
+          // Resetear formulario
+          this.newClient.set({
+            name: '',
+            gender: 'M',
+            age: 0,
+            identification: '',
+            address: '',
+            phone: '',
+            password: '',
+            status: true,
+          });
+          // Recargar lista
+          this.loadClients();
+        },
+        error: (err) => {
+          this.error.set('Error al crear cliente');
+          this.creating.set(false);
+          console.error('Error:', err);
+        },
+      });
+  }
+
+  updateClientField(field: keyof NewClient, value: any): void {
+    this.newClient.update((client) => ({ ...client, [field]: value }));
   }
 }
