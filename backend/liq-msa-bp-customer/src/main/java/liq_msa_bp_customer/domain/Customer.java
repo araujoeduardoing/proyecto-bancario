@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Customer extends Person {
-    private String clientId;
+    private Long clientId;
     private String password;
     private Boolean status;
 }

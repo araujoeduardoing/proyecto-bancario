@@ -49,7 +49,7 @@ public class CustomerController {
     }
     @PutMapping("/{id:[0-9]+}")
     @Operation(summary = "Update customer")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable String id,
+    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id,
                                                    @Valid @RequestBody CustomerRequest request) {
         Customer customer = customerMapper.customerRequestToCustomerDomain(request);
         customer.setClientId(id);

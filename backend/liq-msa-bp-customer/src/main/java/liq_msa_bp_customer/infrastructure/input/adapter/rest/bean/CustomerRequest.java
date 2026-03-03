@@ -11,14 +11,11 @@ import lombok.Setter;
 @Setter
 public class CustomerRequest {
     
-    private String clientId;
-    
     @NotBlank(message = "Password is required")
     @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
     private String password;
     
     private Boolean status;
-    private Long personId;
     
     @NotBlank(message = "Name is required")
     @Size(max = 250, message = "Name must not exceed 250 characters")

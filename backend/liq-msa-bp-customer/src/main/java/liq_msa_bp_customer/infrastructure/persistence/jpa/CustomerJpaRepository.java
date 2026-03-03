@@ -11,8 +11,6 @@ import java.util.List;
 
 @Repository
 public interface CustomerJpaRepository extends JpaRepository<CustomerEntity, Long> {
-    // JpaRepository ya proporciona findById(Long id) que devuelve Optional<CustomerEntity>
-    // No necesitamos sobrescribirlo
     void deleteById(Long id);
 
 }

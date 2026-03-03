@@ -15,8 +15,9 @@ public interface CustomerMapper {
     // MapStruct maneja automáticamente los campos con nombres iguales  
     Customer customerEntityToCustomerDomain(CustomerEntity entity);
 
-    // Mapeo de CustomerRequest a Customer - solo ignorar lo que no debe mapearse
+    // Mapeo de CustomerRequest a Customer - campos auto-generados se ignoran
     @Mapping(target = "personId", ignore = true) // Se genera automáticamente en la BD
+    @Mapping(target = "clientId", ignore = true) // Se genera automáticamente en la BD
     Customer customerRequestToCustomerDomain(CustomerRequest request);
 
 }

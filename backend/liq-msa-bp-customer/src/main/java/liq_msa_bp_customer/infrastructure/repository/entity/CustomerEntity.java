@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Table(name = "customer")
 public class CustomerEntity extends PersonEntity {
 
-    @Column(name = "client_id", unique = true, nullable = false)
-    private String clientId;
+    @Column(name = "client_id", unique = true, nullable = false, insertable = false, updatable = false)
+    private Long clientId;
 
     @Column(name = "password", length = 100, nullable = false)
     private String password;
@@ -21,7 +21,6 @@ public class CustomerEntity extends PersonEntity {
     @Column(name = "status")
     private Boolean status = true;
 
-    // Constructors
     public CustomerEntity() {}
 
 
