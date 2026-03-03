@@ -11,28 +11,28 @@ import lombok.Setter;
 @Setter
 public class CustomerRequest {
     
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
+    @NotBlank(message = "La contraseña es requerida")
+    @Size(min = 6, max = 100, message = "La contraseña debe tener entre 6 y 100 caracteres")
     private String password;
     
     private Boolean status;
     
-    @NotBlank(message = "Name is required")
-    @Size(max = 250, message = "Name must not exceed 250 characters")
+    @NotBlank(message = "El nombre es requerido")
+    @Size(max = 250, message = "El nombre no debe exceder 250 caracteres")
     private String name;
     
-    @Size(max = 100, message = "Gender must not exceed 100 characters")
+    @Size(max = 100, message = "El género no debe exceder 100 caracteres")
     private String gender;
     
     private Integer age;
     
-    @NotBlank(message = "Identification is required")
-    @Size(max = 100, message = "Identification must not exceed 100 characters")
+    @NotBlank(message = "La identificación es requerida")
+    @Size(max = 100, message = "La identificación no debe exceder 100 caracteres")
     private String identification;
     
-    @Size(max = 100, message = "Address must not exceed 100 characters")
+    @Size(max = 100, message = "La dirección no debe exceder 100 caracteres")
     private String address;
     
-    @Size(max = 100, message = "Phone must not exceed 100 characters")
+    @Size(max = 100, message = "El teléfono no debe exceder 100 caracteres")
     private String phone;
 }
