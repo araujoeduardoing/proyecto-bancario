@@ -6,30 +6,46 @@
 
   <button (click)="loadClients()">Actualizar</button>
 
-  <table border="1" *ngIf="clients().length > 0">
-    <thead>
-      <tr>
-        <th>ID Cliente</th>
-        <th>Nombre</th>
-        <th>Identificación</th>
-        <th>Género</th>
-        <th>Edad</th>
-        <th>Dirección</th>
-        <th>Teléfono</th>
-        <th>Estado</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let client of clients()">
-        <td>{{ client.clientId }}</td>
-        <td>{{ client.name }}</td>
-        <td>{{ client.identification }}</td>
-        <td>{{ client.gender }}</td>
-        <td>{{ client.age }}</td>
-        <td>{{ client.address }}</td>
-        <td>{{ client.phone }}</td>
-        <td>{{ client.status ? "Activo" : "Inactivo" }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div *ngIf="clients().length > 0">
+    <br />
+    <label>Buscar: </label>
+    <input
+      type="text"
+      [value]="searchText()"
+      (input)="onSearchChange($any($event.target).value)"
+      placeholder="Buscar por nombre, identificación, dirección o teléfono..."
+    />
+
+    <p>
+      Mostrando {{ filteredClients().length }} de
+      {{ clients().length }} clientes
+    </p>
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>ID Cliente</th>
+          <th>Nombre</th>
+          <th>Identificación</th>
+          <th>Género</th>
+          <th>Edad</th>
+          <th>Dirección</th>
+          <th>Teléfono</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of filteredClients()">
+          <td>{{ client.clientId }}</td>
+          <td>{{ client.name }}</td>
+          <td>{{ client.identification }}</td>
+          <td>{{ client.gender }}</td>
+          <td>{{ client.age }}</td>
+          <td>{{ client.address }}</td>
+          <td>{{ client.phone }}</td>
+          <td>{{ client.status ? "Activo" : "Inactivo" }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
