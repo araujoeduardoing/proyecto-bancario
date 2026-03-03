@@ -1,43 +1,35 @@
-<div class="clientes-mf-container">
+<div>
   <h1>{{ title() }}</h1>
-  <p>Microfrontend de Clientes cargado correctamente</p>
 
-  <div class="content">
-    <h2>Módulo Clientes</h2>
-    <p>Este es el contenido del microfrontend clientes-mf</p>
+  <div *ngIf="loading()">Cargando...</div>
+  <div *ngIf="error()">{{ error() }}</div>
 
-    <!-- Router outlet para futuras rutas -->
-    <router-outlet></router-outlet>
-  </div>
+  <button (click)="loadClients()">Actualizar</button>
+
+  <table border="1" *ngIf="clients().length > 0">
+    <thead>
+      <tr>
+        <th>ID Cliente</th>
+        <th>Nombre</th>
+        <th>Identificación</th>
+        <th>Género</th>
+        <th>Edad</th>
+        <th>Dirección</th>
+        <th>Teléfono</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let client of clients()">
+        <td>{{ client.clientId }}</td>
+        <td>{{ client.name }}</td>
+        <td>{{ client.identification }}</td>
+        <td>{{ client.gender }}</td>
+        <td>{{ client.age }}</td>
+        <td>{{ client.address }}</td>
+        <td>{{ client.phone }}</td>
+        <td>{{ client.status ? "Activo" : "Inactivo" }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-
-<style>
-  .clientes-mf-container {
-    padding: 20px;
-    text-align: center;
-  }
-
-  .clientes-mf-container h1 {
-    color: #333;
-    margin-bottom: 10px;
-  }
-
-  .clientes-mf-container p {
-    color: #666;
-    margin-bottom: 20px;
-  }
-
-  .content {
-    background-color: #f5f5f5;
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 20px;
-  }
-
-  .content h2 {
-    color: #0066cc;
-    margin-bottom: 10px;
-  }
-</style>
-
-<router-outlet />
