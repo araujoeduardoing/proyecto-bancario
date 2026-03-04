@@ -2,6 +2,7 @@ package liq_msa_bp_customer.infrastructure.repository.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Generated;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "customer")
 public class CustomerEntity extends PersonEntity {
 
+    @Generated
     @Column(name = "client_id", unique = true, nullable = false)
     private Long clientId;
 
