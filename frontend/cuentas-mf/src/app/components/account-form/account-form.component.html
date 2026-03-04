@@ -1,0 +1,105 @@
+@if (isVisible()) {
+  <div class="account-form">
+    <div class="form-container">
+      <h3>{{ isEditing() ? "Editar Cuenta" : "Crear Nueva Cuenta" }}</h3>
+
+      <form (ngSubmit)="onSubmit()" #accountForm="ngForm">
+        <div class="form-group">
+          <label for="accountNumber">Número de Cuenta*:</label>
+          <input
+            id="accountNumber"
+            type="text"
+            [value]="formData().accountNumber"
+            (input)="updateField('accountNumber', $any($event.target).value)"
+            placeholder="Número de cuenta"
+            required
+            [class.error]="!isFieldValid('accountNumber')"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="accountType">Tipo de Cuenta:</label>
+          <select
+            id="accountType"
+            [value]="formData().accountType"
+            (change)="updateField('accountType', $any($event.target).value)"
+          >
+            @for (type of accountTypes; track type.value) {
+              <option [value]="type.value">{{ type.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="initialBalance">Saldo Inicial*:</label>
+          <input
+            id="initialBalance"
+            type="number"
+            step="0.01"
+            min="0"
+            [value]="formData().initialBalance"
+            (input)="updateField('initialBalance', +$any($event.target).value)"
+            placeholder="0.00"
+            required
+            [class.error]="!isFieldValid('initialBalance')"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="clientId">ID del Cliente*:</label>
+          <input
+            id="clientId"
+            type="number"
+            min="1"
+            [value]="formData().clientId"
+            (input)="updateField('clientId', +$any($event.target).value)"
+            placeholder="ID del cliente propietario"
+            required
+            [class.error]="!isFieldValid('clientId')"
+          />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label>
+            <input
+              type="checkbox"
+              [checked]="formData().status"
+              (change)="updateField('status', $any($event.target).checked)"
+            />
+            Cuenta activa
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="
+              isSubmitting() ||
+              !isFieldValid('accountNumber') ||
+              !isFieldValid('clientId') ||
+              !isFieldValid('initialBalance')
+            "
+          >
+            {{
+              isSubmitting()
+                ? "Guardando..."
+                : isEditing()
+                  ? "Actualizar"
+                  : "Crear"
+            }}
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="onCancel()"
+            [disabled]="isSubmitting()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

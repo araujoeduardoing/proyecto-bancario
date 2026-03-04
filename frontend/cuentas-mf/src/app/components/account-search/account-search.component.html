@@ -1,0 +1,35 @@
+<div class="account-search">
+  <div class="search-container">
+    <div class="search-input-group">
+      <input
+        type="text"
+        [value]="searchText"
+        (input)="onSearchInput($any($event.target).value)"
+        placeholder="Buscar por número de cuenta, cliente o tipo de cuenta..."
+        class="search-input"
+      />
+      @if (hasActiveSearch()) {
+        <button
+          (click)="onClearSearch()"
+          class="clear-button"
+          title="Limpiar búsqueda"
+        >
+          ✕
+        </button>
+      }
+    </div>
+
+    @if (totalAccounts > 0) {
+      <div class="search-info">
+        <span class="results-count">
+          {{ hasActiveSearch() ? filteredAccounts : totalAccounts }}
+          de {{ totalAccounts }} cuenta{{ totalAccounts === 1 ? "" : "s" }}
+        </span>
+
+        @if (hasActiveSearch()) {
+          <span class="search-hint"> Filtrando por: "{{ searchText }}" </span>
+        }
+      </div>
+    }
+  </div>
+</div>

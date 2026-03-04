@@ -1,0 +1,63 @@
+<div class="account-list">
+  @if (loading) {
+    <div class="loading">Cargando cuentas...</div>
+  }
+
+  @if (!loading && accounts.length === 0) {
+    <div class="no-accounts">No hay cuentas registradas</div>
+  }
+
+  @if (!loading && accounts.length > 0) {
+    <div class="accounts-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Número de Cuenta</th>
+            <th>Tipo</th>
+            <th>Saldo</th>
+            <th>Cliente ID</th>
+            <th>Fecha Creación</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (account of accounts; track account.id) {
+            <tr>
+              <td>{{ account.id }}</td>
+              <td>{{ account.accountNumber }}</td>
+              <td>{{ getAccountTypeLabel(account.accountType) }}</td>
+              <td class="balance">
+                {{ formatBalance(account.initialBalance) }}
+              </td>
+              <td>Cliente #{{ account.clientId }}</td>
+              <td>{{ account.createdAt | date: "dd/MM/yyyy" }}</td>
+              <td>
+                <span [class]="account.status ? 'active' : 'inactive'">
+                  {{ account.status ? "Activa" : "Inactiva" }}
+                </span>
+              </td>
+              <td class="actions">
+                <button
+                  (click)="onEditAccount(account)"
+                  class="btn btn-primary"
+                  [disabled]="isDeleting(account.id)"
+                >
+                  Editar
+                </button>
+                <button
+                  (click)="onDeleteAccount(account)"
+                  class="btn btn-danger"
+                  [disabled]="isDeleting(account.id)"
+                >
+                  {{ isDeleting(account.id) ? "Eliminando..." : "Eliminar" }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
