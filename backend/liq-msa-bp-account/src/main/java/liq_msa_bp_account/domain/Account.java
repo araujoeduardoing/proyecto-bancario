@@ -9,10 +9,11 @@ import java.time.LocalDateTime;
 @Setter
 public class Account {
     private Long id;
-    private String numeroCuenta;
-    private String tipoCuenta;
-    private BigDecimal saldoInicial;
-    private Boolean estado;
-    private LocalDateTime fechaCreacion;
-    private LocalDateTime fechaActualizacion;
+    private String accountNumber;
+    private String accountType;
+    private BigDecimal initialBalance;
+    private Boolean status;
+    private Long clientId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

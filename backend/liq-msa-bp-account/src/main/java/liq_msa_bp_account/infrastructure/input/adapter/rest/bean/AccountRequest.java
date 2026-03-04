@@ -9,19 +9,22 @@ import java.math.BigDecimal;
 @Setter
 public class AccountRequest {
     
-    @NotBlank(message = "El número de cuenta es requerido")
-    @Size(max = 20, message = "El número de cuenta no debe exceder 20 caracteres")
-    private String numeroCuenta;
+    @NotBlank(message = "Account number is required")
+    @Size(max = 20, message = "Account number must not exceed 20 characters")
+    private String accountNumber;
     
-    @NotBlank(message = "El tipo de cuenta es requerido")
-    @Size(max = 50, message = "El tipo de cuenta no debe exceder 50 caracteres")
-    private String tipoCuenta;
+    @NotBlank(message = "Account type is required")
+    @Size(max = 50, message = "Account type must not exceed 50 characters")
+    private String accountType;
     
-    @NotNull(message = "El saldo inicial es requerido")
-    @DecimalMin(value = "0.0", inclusive = true, message = "El saldo inicial no puede ser negativo")
-    @Digits(integer = 13, fraction = 2, message = "El saldo inicial no debe exceder 13 dígitos enteros y 2 decimales")
-    private BigDecimal saldoInicial;
+    @NotNull(message = "Initial balance is required")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Initial balance cannot be negative")
+    @Digits(integer = 13, fraction = 2, message = "Initial balance must not exceed 13 integer digits and 2 decimal places")
+    private BigDecimal initialBalance;
     
-    @NotNull(message = "El estado es requerido")
-    private Boolean estado;
+    @NotNull(message = "Status is required")
+    private Boolean status;
+    
+    @NotNull(message = "Client ID is required")
+    private Long clientId;
 }

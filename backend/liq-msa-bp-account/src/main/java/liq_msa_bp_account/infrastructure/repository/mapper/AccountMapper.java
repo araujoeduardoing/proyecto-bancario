@@ -17,8 +17,8 @@ public interface AccountMapper {
 
     // Mapeo de AccountRequest a Account - campos auto-generados se ignoran
     @Mapping(target = "id", ignore = true) // Se genera automáticamente en la BD
-    @Mapping(target = "fechaCreacion", ignore = true) 
-    @Mapping(target = "fechaActualizacion", ignore = true)
+    @Mapping(target = "createdAt", ignore = true) 
+    @Mapping(target = "updatedAt", ignore = true)
     Account accountRequestToAccountDomain(AccountRequest request);
 
 }

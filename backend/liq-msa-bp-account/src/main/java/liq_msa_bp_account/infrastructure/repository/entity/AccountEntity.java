@@ -9,40 +9,43 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-@Table(name = "cuenta")
+@Table(name = "account")
 public class AccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "numero_cuenta", length = 20, unique = true, nullable = false)
-    private String numeroCuenta;
+    @Column(name = "account_number", length = 20, unique = true, nullable = false)
+    private String accountNumber;
 
-    @Column(name = "tipo_cuenta", length = 50, nullable = false)
-    private String tipoCuenta;
+    @Column(name = "account_type", length = 50, nullable = false)
+    private String accountType;
 
-    @Column(name = "saldo_inicial", precision = 15, scale = 2, nullable = false)
-    private BigDecimal saldoInicial = BigDecimal.ZERO;
+    @Column(name = "initial_balance", precision = 15, scale = 2, nullable = false)
+    private BigDecimal initialBalance = BigDecimal.ZERO;
 
-    @Column(name = "estado", nullable = false)
-    private Boolean estado = true;
+    @Column(name = "status", nullable = false)
+    private Boolean status = true;
 
-    @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion;
+    @Column(name = "client_id", nullable = false)
+    private Long clientId;
 
-    @Column(name = "fecha_actualizacion")
-    private LocalDateTime fechaActualizacion;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        fechaCreacion = LocalDateTime.now();
-        fechaActualizacion = LocalDateTime.now();
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        fechaActualizacion = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     public AccountEntity() {}

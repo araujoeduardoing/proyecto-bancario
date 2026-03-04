@@ -29,7 +29,7 @@ public class AccountServiceImpl implements AccountService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteById(Long id) {
         if (!accountOutputService.findById(id).isPresent()) {
-            throw new IllegalArgumentException("Cuenta no encontrada con ID: " + id);
+            throw new IllegalArgumentException("Account not found with ID: " + id);
         }
         accountOutputService.deleteById(id);
     }

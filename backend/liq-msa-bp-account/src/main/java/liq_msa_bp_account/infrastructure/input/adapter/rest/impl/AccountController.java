@@ -46,7 +46,7 @@ public class AccountController {
     public ResponseEntity<Account> getAccountById(@PathVariable Long id) {
         Optional<Account> account = accountService.findById(id);
         if (account.isEmpty()) {
-            throw new AccountNotFoundException("Cuenta no encontrada con ID: " + id);
+            throw new AccountNotFoundException("Account not found with ID: " + id);
         }
         return ResponseEntity.ok(account.get());
     }
@@ -58,16 +58,17 @@ public class AccountController {
         // Primero verificar que la cuenta existe
         Optional<Account> existingAccountOpt = accountService.findById(id);
         if (existingAccountOpt.isEmpty()) {
-            throw new AccountNotFoundException("Cuenta no encontrada con ID: " + id);
+            throw new AccountNotFoundException("Account not found with ID: " + id);
         }
         
         Account existingAccount = existingAccountOpt.get();
         
         // Actualizar los campos de la cuenta existente con los datos del request
-        existingAccount.setNumeroCuenta(request.getNumeroCuenta());
-        existingAccount.setTipoCuenta(request.getTipoCuenta());
-        existingAccount.setSaldoInicial(request.getSaldoInicial());
-        existingAccount.setEstado(request.getEstado());
+        existingAccount.setAccountNumber(request.getAccountNumber());
+        existingAccount.setAccountType(request.getAccountType());
+        existingAccount.setInitialBalance(request.getInitialBalance());
+        existingAccount.setStatus(request.getStatus());
+        existingAccount.setClientId(request.getClientId());
         
         Account updatedAccount = accountService.save(existingAccount);
         return ResponseEntity.ok(updatedAccount);

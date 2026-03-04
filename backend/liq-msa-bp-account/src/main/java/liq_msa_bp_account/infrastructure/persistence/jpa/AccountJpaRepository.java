@@ -10,9 +10,9 @@ import java.util.Optional;
 public interface AccountJpaRepository extends JpaRepository<AccountEntity, Long> {
     
     // Buscar por numero de cuenta
-    Optional<AccountEntity> findByNumeroCuenta(String numeroCuenta);
+    Optional<AccountEntity> findByAccountNumber(String accountNumber);
     
     // Verificar si existe por numero de cuenta
-    boolean existsByNumeroCuenta(String numeroCuenta);
+    boolean existsByAccountNumber(String accountNumber);
     
 }
