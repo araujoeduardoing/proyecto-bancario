@@ -1,176 +1,46 @@
-<div>
-  <h1>{{ title() }}</h1>
-
-  <div *ngIf="loading()">Cargando...</div>
-  <div *ngIf="error()">{{ error() }}</div>
-
-  <button (click)="toggleForm()">
-    {{
-      showForm() ? "Cancelar" : editing() ? "Cancelar Edición" : "Crear Nuevo"
-    }}
-  </button>
-
-  <div *ngIf="showForm()">
-    <h3>{{ editing() ? "Editar Cliente" : "Crear Nuevo Cliente" }}</h3>
-    <table>
-      <tr>
-        <td>Nombre*:</td>
-        <td>
-          <input
-            type="text"
-            [value]="newClient().name"
-            (input)="updateClientField('name', $any($event.target).value)"
-            placeholder="Nombre completo"
-          />
-        </td>
-      </tr>
-      <tr>
-        <td>Identificación*:</td>
-        <td>
-          <input
-            type="text"
-            [value]="newClient().identification"
-            (input)="
-              updateClientField('identification', $any($event.target).value)
-            "
-            placeholder="Cédula o identificación"
-          />
-        </td>
-      </tr>
-      <tr>
-        <td>Género:</td>
-        <td>
-          <select
-            [value]="newClient().gender"
-            (change)="updateClientField('gender', $any($event.target).value)"
-          >
-            <option value="M">Masculino</option>
-            <option value="F">Femenino</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td>Edad:</td>
-        <td>
-          <input
-            type="number"
-            [value]="newClient().age"
-            (input)="updateClientField('age', +$any($event.target).value)"
-          />
-        </td>
-      </tr>
-      <tr>
-        <td>Dirección:</td>
-        <td>
-          <input
-            type="text"
-            [value]="newClient().address"
-            (input)="updateClientField('address', $any($event.target).value)"
-            placeholder="Dirección"
-          />
-        </td>
-      </tr>
-      <tr>
-        <td>Teléfono:</td>
-        <td>
-          <input
-            type="text"
-            [value]="newClient().phone"
-            (input)="updateClientField('phone', $any($event.target).value)"
-            placeholder="Número de teléfono"
-          />
-        </td>
-      </tr>
-      <tr>
-        <td>Contraseña*:</td>
-        <td>
-          <input
-            type="password"
-            [value]="newClient().password"
-            (input)="updateClientField('password', $any($event.target).value)"
-            placeholder="Contraseña"
-          />
-        </td>
-      </tr>
-      <tr>
-        <td>Estado:</td>
-        <td>
-          <select
-            [value]="newClient().status"
-            (change)="
-              updateClientField('status', $any($event.target).value === 'true')
-            "
-          >
-            <option value="true">Activo</option>
-            <option value="false">Inactivo</option>
-          </select>
-        </td>
-      </tr>
-    </table>
-    <br />
-    <button (click)="createClient()" [disabled]="creating()">
-      {{
-        creating()
-          ? editing()
-            ? "Actualizando..."
-            : "Creando..."
-          : editing()
-            ? "Actualizar Cliente"
-            : "Crear Cliente"
-      }}
+<div class="app-container">
+  <header class="app-header">
+    <h1>{{ title() }}</h1>
+    <button
+      (click)="onShowCreateForm()"
+      class="btn btn-primary"
+      [disabled]="loading()"
+    >
+      Crear Nuevo Cliente
     </button>
-  </div>
+  </header>
 
-  <div *ngIf="clients().length > 0">
-    <br />
-    <label>Buscar: </label>
-    <input
-      type="text"
-      [value]="searchText()"
-      (input)="onSearchChange($any($event.target).value)"
-      placeholder="Buscar por nombre, identificación, dirección o teléfono..."
-    />
+  @if (error()) {
+    <div class="error-message">
+      {{ error() }}
+    </div>
+  }
 
-    <p>
-      Mostrando {{ filteredClients().length }} de
-      {{ clients().length }} clientes
-    </p>
+  <app-client-search
+    [searchText]="searchText()"
+    [totalClients]="clients().length"
+    [filteredClients]="filteredClients().length"
+    (searchChange)="onSearchChange($event)"
+    (clearSearch)="onClearSearch()"
+  >
+  </app-client-search>
 
-    <table border="1">
-      <thead>
-        <tr>
-          <th>ID Cliente</th>
-          <th>Nombre</th>
-          <th>Identificación</th>
-          <th>Género</th>
-          <th>Edad</th>
-          <th>Dirección</th>
-          <th>Teléfono</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let client of filteredClients()">
-          <td>{{ client.clientId }}</td>
-          <td>{{ client.name }}</td>
-          <td>{{ client.identification }}</td>
-          <td>{{ client.gender }}</td>
-          <td>{{ client.age }}</td>
-          <td>{{ client.address }}</td>
-          <td>{{ client.phone }}</td>
-          <td>{{ client.status ? "Activo" : "Inactivo" }}</td>
-          <td>
-            <button (click)="editClient(client)">Editar</button>
-            <button
-              (click)="deleteClient(client)"
-              [disabled]="deleting() === client.clientId"
-            >
-              {{ deleting() === client.clientId ? "Borrando..." : "Borrar" }}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <app-client-list
+    [clients]="filteredClients()"
+    [loading]="loading()"
+    [deleting]="deleting()"
+    (editClient)="onEditClient($event)"
+    (deleteClient)="onDeleteClient($event)"
+  >
+  </app-client-list>
+
+  <app-client-form
+    [isVisible]="showForm()"
+    [isEditing]="editing()"
+    [isSubmitting]="creating()"
+    [clientToEdit]="editingClient()"
+    (submitForm)="onFormSubmit($event)"
+    (cancel)="onFormCancel()"
+  >
+  </app-client-form>
 </div>

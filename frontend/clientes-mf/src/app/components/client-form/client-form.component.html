@@ -1,0 +1,132 @@
+@if (isVisible()) {
+  <div class="client-form">
+    <div class="form-container">
+      <h3>{{ isEditing() ? "Editar Cliente" : "Crear Nuevo Cliente" }}</h3>
+
+      <form (ngSubmit)="onSubmit()" #clientForm="ngForm">
+        <div class="form-group">
+          <label for="name">Nombre*:</label>
+          <input
+            id="name"
+            type="text"
+            [value]="formData().name"
+            (input)="updateField('name', $any($event.target).value)"
+            placeholder="Nombre completo"
+            required
+            [class.error]="!isFieldValid('name')"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="identification">Identificación*:</label>
+          <input
+            id="identification"
+            type="text"
+            [value]="formData().identification"
+            (input)="updateField('identification', $any($event.target).value)"
+            placeholder="Cédula o identificación"
+            required
+            [class.error]="!isFieldValid('identification')"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="gender">Género:</label>
+          <select
+            id="gender"
+            [value]="formData().gender"
+            (change)="updateField('gender', $any($event.target).value)"
+          >
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="age">Edad:</label>
+          <input
+            id="age"
+            type="number"
+            [value]="formData().age"
+            (input)="updateField('age', +$any($event.target).value)"
+            placeholder="Edad"
+            min="0"
+            max="120"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="address">Dirección:</label>
+          <input
+            id="address"
+            type="text"
+            [value]="formData().address"
+            (input)="updateField('address', $any($event.target).value)"
+            placeholder="Dirección completa"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Teléfono:</label>
+          <input
+            id="phone"
+            type="tel"
+            [value]="formData().phone"
+            (input)="updateField('phone', $any($event.target).value)"
+            placeholder="Número de teléfono"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña*:</label>
+          <input
+            id="password"
+            type="password"
+            [value]="formData().password"
+            (input)="updateField('password', $any($event.target).value)"
+            placeholder="Contraseña"
+            required
+            [class.error]="!isFieldValid('password')"
+          />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label>
+            <input
+              type="checkbox"
+              [checked]="formData().status"
+              (change)="updateField('status', $any($event.target).checked)"
+            />
+            Cliente activo
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="
+              isSubmitting() ||
+              !isFieldValid('name') ||
+              !isFieldValid('identification') ||
+              !isFieldValid('password')
+            "
+          >
+            {{
+              isSubmitting() ? "Guardando..." : isEditing() ? "Actualizar" : "Crear"
+            }}
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="onCancel()"
+            [disabled]="isSubmitting()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

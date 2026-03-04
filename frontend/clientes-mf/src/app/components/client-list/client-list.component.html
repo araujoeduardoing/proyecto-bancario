@@ -1,0 +1,65 @@
+<div class="client-list">
+  @if (loading) {
+    <div class="loading">Cargando clientes...</div>
+  }
+
+  @if (!loading && clients.length === 0) {
+    <div class="no-clients">No hay clientes registrados</div>
+  }
+
+  @if (!loading && clients.length > 0) {
+    <div class="clients-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Identificación</th>
+            <th>Género</th>
+            <th>Edad</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (client of clients; track client.clientId) {
+            <tr>
+              <td>{{ client.clientId }}</td>
+              <td>{{ client.name }}</td>
+              <td>{{ client.identification }}</td>
+              <td>{{ client.gender === "M" ? "Masculino" : "Femenino" }}</td>
+              <td>{{ client.age }}</td>
+              <td>{{ client.address }}</td>
+              <td>{{ client.phone }}</td>
+              <td>
+                <span [class]="client.status ? 'active' : 'inactive'">
+                  {{ client.status ? "Activo" : "Inactivo" }}
+                </span>
+              </td>
+              <td class="actions">
+                <button
+                  (click)="onEditClient(client)"
+                  class="btn btn-primary"
+                  [disabled]="isDeleting(client.clientId)"
+                >
+                  Editar
+                </button>
+                <button
+                  (click)="onDeleteClient(client)"
+                  class="btn btn-danger"
+                  [disabled]="isDeleting(client.clientId)"
+                >
+                  {{
+                    isDeleting(client.clientId) ? "Eliminando..." : "Eliminar"
+                  }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

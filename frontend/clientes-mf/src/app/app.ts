@@ -1,50 +1,35 @@
 import { Component, signal, inject, OnInit, computed } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Client } from './models/client.model';
-
-interface NewClient {
-  name: string;
-  gender: string;
-  age: number;
-  identification: string;
-  address: string;
-  phone: string;
-  password: string;
-  status: boolean;
-}
+import { ClientFormData } from './models/client.dto';
+import { ClientService } from './services/client.service';
+import { ErrorHandlerService } from './services/error-handler.service';
+import { ClientListComponent } from './components/client-list/client-list.component';
+import { ClientFormComponent } from './components/client-form/client-form.component';
+import { ClientSearchComponent } from './components/client-search/client-search.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, FormsModule],
+  imports: [ClientListComponent, ClientFormComponent, ClientSearchComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App implements OnInit {
-  protected readonly title = signal('clientes-mf');
+  protected readonly title = signal('Gestión de Clientes');
+
+  // Client data
   protected clients = signal<Client[]>([]);
+  protected searchText = signal('');
+
+  // UI State
   protected loading = signal(false);
   protected error = signal<string | null>(null);
-  protected searchText = signal('');
   protected showForm = signal(false);
   protected creating = signal(false);
   protected editing = signal(false);
-  protected editingClientId = signal<number | null>(null);
+  protected editingClient = signal<Client | null>(null);
   protected deleting = signal<number | null>(null);
 
-  protected newClient = signal<NewClient>({
-    name: '',
-    gender: 'M',
-    age: 0,
-    identification: '',
-    address: '',
-    phone: '',
-    password: '',
-    status: true,
-  });
-
+  // Computed values
   protected filteredClients = computed(() => {
     const search = this.searchText().toLowerCase();
     if (!search) {
@@ -59,144 +44,88 @@ export class App implements OnInit {
     );
   });
 
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:4101/business/retail/v1';
+  // Services
+  private readonly clientService = inject(ClientService);
+  private readonly errorHandler = inject(ErrorHandlerService);
 
   ngOnInit(): void {
     this.loadClients();
   }
 
+  // Client operations
   loadClients(): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.http.get<Client[]>(`${this.baseUrl}/customers/all`).subscribe({
+    this.clientService.getAll().subscribe({
       next: (clients) => {
         this.clients.set(clients);
         this.loading.set(false);
       },
       error: (err) => {
-        let errorMessage = 'Error al conectar con el servidor';
-        if (err?.error?.message || err?.error?.detailMessage) {
-          errorMessage =
-            (err.error.message || '') +
-            (err.error.detailMessage
-              ? err.error.message
-                ? ': ' + err.error.detailMessage
-                : err.error.detailMessage
-              : '');
-        }
-        this.error.set(errorMessage);
+        this.error.set(this.errorHandler.handleHttpError(err, 'load'));
         this.loading.set(false);
-        console.error('Error:', err);
       },
     });
   }
 
+  // Search operations
   onSearchChange(value: string): void {
     this.searchText.set(value);
   }
 
-  toggleForm(): void {
-    this.showForm.set(!this.showForm());
-    if (!this.showForm()) {
-      this.editing.set(false);
-      this.editingClientId.set(null);
-      this.resetForm();
-    }
+  onClearSearch(): void {
+    this.searchText.set('');
   }
 
-  createClient(): void {
-    const client = this.newClient();
-
-    if (!client.name || !client.identification || !client.password) {
-      this.error.set('Nombre, identificación y contraseña son obligatorios');
-      return;
-    }
-
-    this.creating.set(true);
-    this.error.set(null);
-
-    const request = this.editing()
-      ? this.http.put<any>(
-          `${this.baseUrl}/customers/${this.editingClientId()}`,
-          client,
-        )
-      : this.http.post<any>(`${this.baseUrl}/customers/register`, client);
-
-    // Debug logs
-    if (this.editing()) {
-      console.log(
-        'PUT URL:',
-        `${this.baseUrl}/customers/${this.editingClientId()}`,
-      );
-      console.log('PUT Data:', client);
-      console.log('Editing Client ID:', this.editingClientId());
-    }
-
-    request.subscribe({
-      next: () => {
-        this.creating.set(false);
-        this.showForm.set(false);
-        this.editing.set(false);
-        this.editingClientId.set(null);
-        this.resetForm();
-        this.loadClients();
-      },
-      error: (err) => {
-        let errorMessage = this.editing()
-          ? 'Error al actualizar cliente'
-          : 'Error al crear cliente';
-        if (err?.error?.message || err?.error?.detailMessage) {
-          errorMessage =
-            (err.error.message || '') +
-            (err.error.detailMessage
-              ? err.error.message
-                ? ': ' + err.error.detailMessage
-                : err.error.detailMessage
-              : '');
-        }
-        this.error.set(errorMessage);
-        this.creating.set(false);
-        console.error('Error:', err);
-      },
-    });
-  }
-
-  updateClientField(field: keyof NewClient, value: any): void {
-    this.newClient.update((client) => ({ ...client, [field]: value }));
-  }
-
-  editClient(client: Client): void {
-    this.editing.set(true);
-    this.editingClientId.set(client.clientId);
-    this.newClient.set({
-      name: client.name,
-      gender: client.gender,
-      age: client.age,
-      identification: client.identification,
-      address: client.address,
-      phone: client.phone,
-      password: client.password,
-      status: client.status,
-    });
+  // Form operations
+  onShowCreateForm(): void {
+    this.editing.set(false);
+    this.editingClient.set(null);
     this.showForm.set(true);
   }
 
-  private resetForm(): void {
-    this.newClient.set({
-      name: '',
-      gender: 'M',
-      age: 0,
-      identification: '',
-      address: '',
-      phone: '',
-      password: '',
-      status: true,
+  onEditClient(client: Client): void {
+    this.editing.set(true);
+    this.editingClient.set(client);
+    this.showForm.set(true);
+  }
+
+  onFormSubmit(formData: ClientFormData): void {
+    this.creating.set(true);
+    this.error.set(null);
+
+    const operation =
+      this.editing() && this.editingClient()
+        ? this.clientService.update(this.editingClient()!.clientId, formData)
+        : this.clientService.create(formData);
+
+    operation.subscribe({
+      next: () => {
+        this.creating.set(false);
+        this.closeForm();
+        this.loadClients();
+      },
+      error: (err) => {
+        const errorType = this.editing() ? 'update' : 'create';
+        this.error.set(this.errorHandler.handleHttpError(err, errorType));
+        this.creating.set(false);
+      },
     });
   }
 
-  deleteClient(client: Client): void {
+  onFormCancel(): void {
+    this.closeForm();
+  }
+
+  private closeForm(): void {
+    this.showForm.set(false);
+    this.editing.set(false);
+    this.editingClient.set(null);
+  }
+
+  // Delete operation
+  onDeleteClient(client: Client): void {
     if (!confirm(`¿Está seguro de eliminar al cliente "${client.name}"?`)) {
       return;
     }
@@ -204,28 +133,15 @@ export class App implements OnInit {
     this.deleting.set(client.clientId);
     this.error.set(null);
 
-    this.http
-      .delete<any>(`${this.baseUrl}/customers/${client.clientId}`)
-      .subscribe({
-        next: () => {
-          this.deleting.set(null);
-          this.loadClients();
-        },
-        error: (err) => {
-          let errorMessage = 'Error al eliminar cliente';
-          if (err?.error?.message || err?.error?.detailMessage) {
-            errorMessage =
-              (err.error.message || '') +
-              (err.error.detailMessage
-                ? err.error.message
-                  ? ': ' + err.error.detailMessage
-                  : err.error.detailMessage
-                : '');
-          }
-          this.error.set(errorMessage);
-          this.deleting.set(null);
-          console.error('Error:', err);
-        },
-      });
+    this.clientService.delete(client.clientId).subscribe({
+      next: () => {
+        this.deleting.set(null);
+        this.loadClients();
+      },
+      error: (err) => {
+        this.error.set(this.errorHandler.handleHttpError(err, 'delete'));
+        this.deleting.set(null);
+      },
+    });
   }
 }

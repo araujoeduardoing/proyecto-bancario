@@ -1,0 +1,35 @@
+<div class="client-search">
+  <div class="search-container">
+    <div class="search-input-group">
+      <input
+        type="text"
+        [value]="searchText"
+        (input)="onSearchInput($any($event.target).value)"
+        placeholder="Buscar por nombre, identificación, dirección o teléfono..."
+        class="search-input"
+      />
+      @if (hasActiveSearch()) {
+        <button
+          (click)="onClearSearch()"
+          class="clear-button"
+          title="Limpiar búsqueda"
+        >
+          ✕
+        </button>
+      }
+    </div>
+
+    @if (totalClients > 0) {
+      <div class="search-info">
+        <span class="results-count">
+          {{ hasActiveSearch() ? filteredClients : totalClients }}
+          de {{ totalClients }} cliente{{ totalClients === 1 ? "" : "s" }}
+        </span>
+
+        @if (hasActiveSearch()) {
+          <span class="search-hint"> Filtrando por: "{{ searchText }}" </span>
+        }
+      </div>
+    }
+  </div>
+</div>
