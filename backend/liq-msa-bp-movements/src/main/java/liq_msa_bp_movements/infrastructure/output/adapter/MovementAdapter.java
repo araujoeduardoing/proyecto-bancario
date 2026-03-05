@@ -2,6 +2,7 @@ package liq_msa_bp_movements.infrastructure.output.adapter;
 
 import liq_msa_bp_movements.application.output.port.MovementOutputService;
 import liq_msa_bp_movements.domain.Movement;
+import liq_msa_bp_movements.domain.MovementWithDetails;
 import liq_msa_bp_movements.infrastructure.repository.MovementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,5 +38,15 @@ public class MovementAdapter implements MovementOutputService {
     @Override
     public List<Movement> findByClientId(Long clientId) {
         return movementRepository.findByClientId(clientId);
+    }
+
+    @Override
+    public List<MovementWithDetails> findAllWithDetails() {
+        return movementRepository.findAllWithDetails();
+    }
+
+    @Override
+    public List<MovementWithDetails> findByClientIdWithDetails(Long clientId) {
+        return movementRepository.findByClientIdWithDetails(clientId);
     }
 }

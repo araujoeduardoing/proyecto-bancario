@@ -2,6 +2,7 @@ package liq_msa_bp_movements.infrastructure.input.adapter.rest.impl;
 
 import liq_msa_bp_movements.application.input.port.MovementService;
 import liq_msa_bp_movements.domain.Movement;
+import liq_msa_bp_movements.domain.MovementWithDetails;
 import liq_msa_bp_movements.infrastructure.exception.MovementNotFoundException;
 import liq_msa_bp_movements.infrastructure.input.adapter.rest.bean.MovementRequest;
 import liq_msa_bp_movements.infrastructure.repository.mapper.MovementMapper;
@@ -62,7 +63,6 @@ public class MovementController {
         
         Movement existingMovement = existingMovementOpt.get();
         
-        // Actualizar los campos del movimiento existente
         existingMovement.setClientId(request.getClientId());
         existingMovement.setAccountId(request.getAccountId());
         existingMovement.setMovementType(request.getMovementType());
@@ -95,6 +95,24 @@ public class MovementController {
     @Operation(summary = "Get movements by client ID")
     public ResponseEntity<List<Movement>> getMovementsByClientId(@PathVariable Long clientId) {
         List<Movement> movements = movementService.findByClientId(clientId);
+        return movements.isEmpty()
+                ? ResponseEntity.ok(List.of())
+                : ResponseEntity.ok(movements);
+    }
+
+    @GetMapping("/details/all")
+    @Operation(summary = "Get all movements with account and client details")
+    public ResponseEntity<List<MovementWithDetails>> getAllMovementsWithDetails() {
+        List<MovementWithDetails> movements = movementService.findAllWithDetails();
+        return movements.isEmpty()
+                ? ResponseEntity.ok(List.of())
+                : ResponseEntity.ok(movements);
+    }
+
+    @GetMapping("/details/client/{clientId:[0-9]+}")
+    @Operation(summary = "Get movements by client ID with account and client details")
+    public ResponseEntity<List<MovementWithDetails>> getMovementsByClientIdWithDetails(@PathVariable Long clientId) {
+        List<MovementWithDetails> movements = movementService.findByClientIdWithDetails(clientId);
         return movements.isEmpty()
                 ? ResponseEntity.ok(List.of())
                 : ResponseEntity.ok(movements);

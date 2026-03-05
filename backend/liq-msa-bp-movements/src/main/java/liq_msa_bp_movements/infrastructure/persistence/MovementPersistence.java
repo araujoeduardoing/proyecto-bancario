@@ -1,10 +1,12 @@
 package liq_msa_bp_movements.infrastructure.persistence;
 
 import liq_msa_bp_movements.domain.Movement;
+import liq_msa_bp_movements.domain.MovementWithDetails;
 import liq_msa_bp_movements.infrastructure.persistence.jpa.MovementJpaRepository;
 import liq_msa_bp_movements.infrastructure.repository.MovementRepository;
 import liq_msa_bp_movements.infrastructure.repository.entity.MovementEntity;
 import liq_msa_bp_movements.infrastructure.repository.mapper.MovementMapper;
+import liq_msa_bp_movements.infrastructure.repository.mapper.MovementDetailsMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 public class MovementPersistence implements MovementRepository {
     private final MovementJpaRepository jpaRepository;
     private final MovementMapper movementMapper;
+    private final MovementDetailsMapper movementDetailsMapper;
 
     @Override
     public Movement save(Movement movement) {
@@ -51,5 +54,17 @@ public class MovementPersistence implements MovementRepository {
                 .stream()
                 .map(movementMapper::movementEntityToMovementDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MovementWithDetails> findAllWithDetails() {
+        List<Object[]> results = jpaRepository.findAllMovementsWithDetails();
+        return movementDetailsMapper.mapToMovementWithDetailsList(results);
+    }
+
+    @Override
+    public List<MovementWithDetails> findByClientIdWithDetails(Long clientId) {
+        List<Object[]> results = jpaRepository.findMovementsWithDetailsByClientId(clientId);
+        return movementDetailsMapper.mapToMovementWithDetailsList(results);
     }
 }

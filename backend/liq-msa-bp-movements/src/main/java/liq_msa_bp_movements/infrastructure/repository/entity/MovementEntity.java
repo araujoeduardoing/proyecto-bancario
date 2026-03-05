@@ -50,6 +50,14 @@ public class MovementEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", insertable = false, updatable = false)
+    private AccountEntity account;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", insertable = false, updatable = false)
+    private CustomerEntity customer;
+
     public MovementEntity() {}
 
     @PrePersist

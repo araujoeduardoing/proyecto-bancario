@@ -9,16 +9,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface MovementMapper {
 
-    // MapStruct maneja automáticamente los campos con nombres iguales
     MovementEntity movementToMovementEntity(Movement movement);
     
-    // MapStruct maneja automáticamente los campos con nombres iguales  
     Movement movementEntityToMovementDomain(MovementEntity entity);
 
-    // Mapeo de MovementRequest a Movement - campos auto-generados se ignoran
-    @Mapping(target = "movementId", ignore = true) // Se genera automáticamente en la BD
-    @Mapping(target = "movementDate", ignore = true) // Se genera automáticamente
-    @Mapping(target = "createdAt", ignore = true) // Se genera automáticamente
-    @Mapping(target = "updatedAt", ignore = true) // Se genera automáticamente
+    @Mapping(target = "movementId", ignore = true)
+    @Mapping(target = "movementDate", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Movement movementRequestToMovementDomain(MovementRequest request);
 }

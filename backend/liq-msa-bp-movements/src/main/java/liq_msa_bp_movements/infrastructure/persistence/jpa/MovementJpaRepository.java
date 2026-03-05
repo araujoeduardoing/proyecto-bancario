@@ -11,18 +11,59 @@ import java.util.List;
 @Repository
 public interface MovementJpaRepository extends JpaRepository<MovementEntity, Long> {
     
-    // Buscar movimientos por client_id
     @Query("SELECT m FROM MovementEntity m WHERE m.clientId = :clientId ORDER BY m.movementDate DESC")
     List<MovementEntity> findByClientId(@Param("clientId") Long clientId);
     
-    // Buscar movimientos por account_id
     @Query("SELECT m FROM MovementEntity m WHERE m.accountId = :accountId ORDER BY m.movementDate DESC")
     List<MovementEntity> findByAccountId(@Param("accountId") Long accountId);
     
-    // Buscar movimientos por client_id y account_id
     @Query("SELECT m FROM MovementEntity m WHERE m.clientId = :clientId AND m.accountId = :accountId ORDER BY m.movementDate DESC")
     List<MovementEntity> findByClientIdAndAccountId(@Param("clientId") Long clientId, @Param("accountId") Long accountId);
     
-    // Verificar si existe un movimiento
     boolean existsByMovementId(Long movementId);
+    
+    @Query("""
+        SELECT 
+            m.movementId,
+            m.movementDate,
+            m.clientId,
+            m.accountId,
+            m.movementType,
+            m.initialBalance,
+            m.movementStatus,
+            m.amount,
+            m.availableBalance,
+            m.createdAt,
+            m.updatedAt,
+            a.accountNumber,
+            c.name
+        FROM MovementEntity m
+        JOIN m.account a
+        JOIN m.customer c
+        ORDER BY m.movementDate DESC
+        """)
+    List<Object[]> findAllMovementsWithDetails();
+    
+    @Query("""
+        SELECT 
+            m.movementId,
+            m.movementDate,
+            m.clientId,
+            m.accountId,
+            m.movementType,
+            m.initialBalance,
+            m.movementStatus,
+            m.amount,
+            m.availableBalance,
+            m.createdAt,
+            m.updatedAt,
+            a.accountNumber,
+            c.name
+        FROM MovementEntity m
+        JOIN m.account a
+        JOIN m.customer c
+        WHERE m.clientId = :clientId
+        ORDER BY m.movementDate DESC
+        """)
+    List<Object[]> findMovementsWithDetailsByClientId(@Param("clientId") Long clientId);
 }
