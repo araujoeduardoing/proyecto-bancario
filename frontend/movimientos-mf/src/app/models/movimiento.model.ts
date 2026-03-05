@@ -1,10 +1,15 @@
 export interface Movimiento {
-  id: number;
-  numeroMovimiento: string;
-  tipoMovimiento: string;
-  monto: number;
+  movementId: number;
+  movementDate: string;
   clientId: number;
-  status: boolean;
+  accountId: number;
+  movementType: string;
+  initialBalance: number;
+  movementStatus: string;
+  amount: number;
+  availableBalance: number;
   createdAt: string;
   updatedAt: string;
+  accountNumber: string;
+  clientName: string;
 }

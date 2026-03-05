@@ -5,7 +5,7 @@
         type="text"
         [value]="searchText"
         (input)="onSearchInput($any($event.target).value)"
-        placeholder="Buscar por número de movimiento, cliente o tipo de movimiento..."
+        placeholder="Buscar por número de cuenta, tipo de movimiento o nombre del cliente..."
         class="search-input"
       />
       @if (hasActiveSearch()) {

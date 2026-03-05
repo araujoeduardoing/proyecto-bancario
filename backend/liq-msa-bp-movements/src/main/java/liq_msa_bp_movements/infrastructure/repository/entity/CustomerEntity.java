@@ -14,6 +14,11 @@ public class CustomerEntity {
     @Column(name = "client_id")
     private Long clientId;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "person_id")
+    private Long personId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "person_id", insertable = false, updatable = false)
+    private PersonEntity person;
+
 }

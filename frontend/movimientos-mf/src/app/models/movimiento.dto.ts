@@ -1,17 +1,19 @@
 export interface CreateMovimientoDto {
-  numeroMovimiento: string;
-  tipoMovimiento: string;
-  monto: number;
+  movementDate: string;
   clientId: number;
-  status: boolean;
+  accountId: number;
+  movementType: string;
+  amount: number;
+  movementStatus: string;
 }
 
 export interface UpdateMovimientoDto extends CreateMovimientoDto {}
 
 export interface MovimientoFormData {
-  numeroMovimiento: string;
-  tipoMovimiento: string;
-  monto: number;
+  movementDate: string;
   clientId: number;
-  status: boolean;
+  accountId: number;
+  movementType: string;
+  amount: number;
+  movementStatus: string;
 }

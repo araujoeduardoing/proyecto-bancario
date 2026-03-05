@@ -12,10 +12,10 @@ import {
 })
 export class MovimientoService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:4102/business/retail/v1';
+  private readonly baseUrl = 'http://localhost:4103/business/retail/v1';
 
   getAll(): Observable<Movimiento[]> {
-    return this.http.get<Movimiento[]>(`${this.baseUrl}/movimientos/all`);
+    return this.http.get<Movimiento[]>(`${this.baseUrl}/movements/details/all`);
   }
 
   create(movimiento: CreateMovimientoDto): Observable<any> {

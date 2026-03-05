@@ -36,10 +36,11 @@ public interface MovementJpaRepository extends JpaRepository<MovementEntity, Lon
             m.createdAt,
             m.updatedAt,
             a.accountNumber,
-            c.name
+            p.name
         FROM MovementEntity m
         JOIN m.account a
         JOIN m.customer c
+        JOIN c.person p
         ORDER BY m.movementDate DESC
         """)
     List<Object[]> findAllMovementsWithDetails();
@@ -58,12 +59,13 @@ public interface MovementJpaRepository extends JpaRepository<MovementEntity, Lon
             m.createdAt,
             m.updatedAt,
             a.accountNumber,
-            c.name
+            p.name
         FROM MovementEntity m
         JOIN m.account a
         JOIN m.customer c
+        JOIN c.person p
         WHERE m.clientId = :clientId
         ORDER BY m.movementDate DESC
-        """)
+        """)    
     List<Object[]> findMovementsWithDetailsByClientId(@Param("clientId") Long clientId);
 }

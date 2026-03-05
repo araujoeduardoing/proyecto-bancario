@@ -30,17 +30,22 @@ export class MovimientoListComponent {
 
   getMovimientoTypeLabel(type: string): string {
     const types: Record<string, string> = {
-      credito: 'Crédito',
-      debito: 'Débito',
-      transferencia: 'Transferencia',
+      AHORROS: 'Ahorros',
+      CORRIENTE: 'Corriente',
+      DEPOSITO: 'Depósito',
+      RETIRO: 'Retiro',
     };
     return types[type] || type;
   }
 
-  formatMonto(monto: number): string {
+  formatAmount(amount: number): string {
     return new Intl.NumberFormat('es-EC', {
       style: 'currency',
       currency: 'USD',
-    }).format(monto);
+    }).format(amount);
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('es-EC');
   }
 }

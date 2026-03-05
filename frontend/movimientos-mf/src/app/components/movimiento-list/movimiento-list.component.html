@@ -13,45 +13,63 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>Número de Movimiento</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Número de Cuenta</th>
             <th>Tipo</th>
             <th>Monto</th>
-            <th>Cliente ID</th>
-            <th>Fecha Creación</th>
+            <th>Saldo Disponible</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          @for (movimiento of movimientos; track movimiento.id) {
+          @for (movimiento of movimientos; track movimiento.movementId) {
             <tr>
-              <td>{{ movimiento.id }}</td>
-              <td>{{ movimiento.numeroMovimiento }}</td>
-              <td>{{ getMovimientoTypeLabel(movimiento.tipoMovimiento) }}</td>
+              <td>{{ movimiento.movementId }}</td>
+              <td>{{ formatDate(movimiento.movementDate) }}</td>
+              <td>{{ movimiento.clientName }}</td>
+              <td>{{ movimiento.accountNumber }}</td>
+              <td>{{ getMovimientoTypeLabel(movimiento.movementType) }}</td>
               <td class="monto">
-                {{ formatMonto(movimiento.monto) }}
+                {{ formatAmount(movimiento.amount) }}
               </td>
-              <td>Cliente #{{ movimiento.clientId }}</td>
-              <td>{{ movimiento.createdAt | date: "dd/MM/yyyy" }}</td>
+              <td class="monto">
+                {{ formatAmount(movimiento.availableBalance) }}
+              </td>
               <td>
-                <span [class]="movimiento.status ? 'active' : 'inactive'">
-                  {{ movimiento.status ? "Activo" : "Inactivo" }}
+                <span
+                  [class]="
+                    movimiento.movementStatus === 'ACTIVE'
+                      ? 'active'
+                      : 'inactive'
+                  "
+                >
+                  {{
+                    movimiento.movementStatus === "ACTIVE"
+                      ? "Activo"
+                      : "Inactivo"
+                  }}
                 </span>
               </td>
               <td class="actions">
                 <button
                   (click)="onEditMovimiento(movimiento)"
                   class="btn btn-primary"
-                  [disabled]="isDeleting(movimiento.id)"
+                  [disabled]="isDeleting(movimiento.movementId)"
                 >
                   Editar
                 </button>
                 <button
                   (click)="onDeleteMovimiento(movimiento)"
                   class="btn btn-danger"
-                  [disabled]="isDeleting(movimiento.id)"
+                  [disabled]="isDeleting(movimiento.movementId)"
                 >
-                  {{ isDeleting(movimiento.id) ? "Eliminando..." : "Eliminar" }}
+                  {{
+                    isDeleting(movimiento.movementId)
+                      ? "Eliminando..."
+                      : "Eliminar"
+                  }}
                 </button>
               </td>
             </tr>
@@ -60,4 +78,4 @@
       </table>
     </div>
   }
-}
+</div>

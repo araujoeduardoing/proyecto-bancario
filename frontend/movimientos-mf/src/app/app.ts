@@ -41,8 +41,9 @@ export class App implements OnInit {
     }
     return this.movimientos().filter(
       (movimiento) =>
-        movimiento.numeroMovimiento.toLowerCase().includes(search) ||
-        movimiento.tipoMovimiento.toLowerCase().includes(search),
+        movimiento.accountNumber.toLowerCase().includes(search) ||
+        movimiento.movementType.toLowerCase().includes(search) ||
+        movimiento.clientName.toLowerCase().includes(search),
     );
   });
 
@@ -99,7 +100,10 @@ export class App implements OnInit {
 
     const operation =
       this.editing() && this.editingMovimiento()
-        ? this.movimientoService.update(this.editingMovimiento()!.id, formData)
+        ? this.movimientoService.update(
+            this.editingMovimiento()!.movementId,
+            formData,
+          )
         : this.movimientoService.create(formData);
 
     operation.subscribe({
@@ -130,16 +134,16 @@ export class App implements OnInit {
   onDeleteMovimiento(movimiento: Movimiento): void {
     if (
       !confirm(
-        `¿Está seguro de eliminar el movimiento "${movimiento.numeroMovimiento}"?`,
+        `¿Está seguro de eliminar el movimiento de la cuenta "${movimiento.accountNumber}"?`,
       )
     ) {
       return;
     }
 
-    this.deleting.set(movimiento.id);
+    this.deleting.set(movimiento.movementId);
     this.error.set(null);
 
-    this.movimientoService.delete(movimiento.id).subscribe({
+    this.movimientoService.delete(movimiento.movementId).subscribe({
       next: () => {
         this.deleting.set(null);
         this.loadMovimientos();

@@ -9,6 +9,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import { Movimiento } from '../../models/movimiento.model';
 import { MovimientoFormData } from '../../models/movimiento.dto';
 import { Client } from '../../models/client.model';
@@ -16,7 +17,7 @@ import { ClientService } from '../../services/client.service';
 
 @Component({
   selector: 'app-movimiento-form',
-  imports: [FormsModule],
+  imports: [FormsModule, DatePipe],
   templateUrl: './movimiento-form.component.html',
   styleUrl: './movimiento-form.component.scss',
 })
@@ -38,17 +39,19 @@ export class MovimientoFormComponent implements OnInit {
   loadingClients = signal(false);
 
   formData = signal<MovimientoFormData>({
-    numeroMovimiento: '',
-    tipoMovimiento: 'credito',
-    monto: 0,
+    movementDate: new Date().toISOString(),
     clientId: 0,
-    status: true,
+    accountId: 0,
+    movementType: 'AHORROS',
+    amount: 0,
+    movementStatus: 'ACTIVE',
   });
 
   movimientoTypes = [
-    { value: 'credito', label: 'Crédito' },
-    { value: 'debito', label: 'Débito' },
-    { value: 'transferencia', label: 'Transferencia' },
+    { value: 'AHORROS', label: 'Ahorros' },
+    { value: 'CORRIENTE', label: 'Corriente' },
+    { value: 'DEPOSITO', label: 'Depósito' },
+    { value: 'RETIRO', label: 'Retiro' },
   ];
 
   constructor() {
@@ -57,11 +60,12 @@ export class MovimientoFormComponent implements OnInit {
       const movimiento = this.movimientoToEdit();
       if (movimiento && this.isEditing()) {
         this.formData.set({
-          numeroMovimiento: movimiento.numeroMovimiento,
-          tipoMovimiento: movimiento.tipoMovimiento,
-          monto: movimiento.monto,
+          movementDate: movimiento.movementDate,
           clientId: movimiento.clientId,
-          status: movimiento.status,
+          accountId: movimiento.accountId,
+          movementType: movimiento.movementType,
+          amount: movimiento.amount,
+          movementStatus: movimiento.movementStatus,
         });
       }
     });
@@ -92,7 +96,12 @@ export class MovimientoFormComponent implements OnInit {
     const data = this.formData();
 
     // Basic validation
-    if (!data.numeroMovimiento || data.clientId <= 0 || data.monto < 0) {
+    if (
+      !data.movementDate ||
+      data.clientId <= 0 ||
+      data.accountId <= 0 ||
+      data.amount < 0
+    ) {
       return;
     }
 
@@ -106,11 +115,12 @@ export class MovimientoFormComponent implements OnInit {
 
   private resetForm(): void {
     this.formData.set({
-      numeroMovimiento: '',
-      tipoMovimiento: 'credito',
-      monto: 0,
+      movementDate: new Date().toISOString(),
       clientId: 0,
-      status: true,
+      accountId: 0,
+      movementType: 'AHORROS',
+      amount: 0,
+      movementStatus: 'ACTIVE',
     });
   }
 
@@ -124,15 +134,24 @@ export class MovimientoFormComponent implements OnInit {
 
   isFieldValid(field: keyof MovimientoFormData): boolean {
     const data = this.formData();
-    if (field === 'numeroMovimiento') {
+    if (field === 'movementDate') {
       return !!data[field];
     }
-    if (field === 'clientId') {
+    if (field === 'clientId' || field === 'accountId') {
       return data[field] > 0;
     }
-    if (field === 'monto') {
+    if (field === 'amount') {
       return data[field] >= 0;
     }
+    if (field === 'movementType') {
+      return !!data[field];
+    }
     return true;
+  }
+
+  formatDateForInput(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toISOString().slice(0, 16);
   }
 }

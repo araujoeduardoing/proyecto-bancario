@@ -9,6 +9,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface MovementMapper {
 
+    @Mapping(target = "account", ignore = true)
+    @Mapping(target = "customer", ignore = true)
     MovementEntity movementToMovementEntity(Movement movement);
     
     Movement movementEntityToMovementDomain(MovementEntity entity);
