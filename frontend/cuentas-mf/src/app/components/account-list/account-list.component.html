@@ -17,6 +17,7 @@
             <th>Tipo</th>
             <th>Saldo</th>
             <th>Cliente ID</th>
+            <th>Nombre</th>
             <th>Fecha Creación</th>
             <th>Estado</th>
             <th>Acciones</th>
@@ -31,7 +32,8 @@
               <td class="balance">
                 {{ formatBalance(account.initialBalance) }}
               </td>
-              <td>Cliente #{{ account.clientId }}</td>
+              <td>{{ account.clientId }}</td>
+              <td>{{ account.name }}</td>
               <td>{{ account.createdAt | date: "dd/MM/yyyy" }}</td>
               <td>
                 <span [class]="account.status ? 'active' : 'inactive'">

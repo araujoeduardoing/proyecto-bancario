@@ -4,6 +4,7 @@ export interface Account {
   accountType: string;
   initialBalance: number;
   clientId: number;
+  name: string;
   status: boolean;
   createdAt: string;
   updatedAt: string;
