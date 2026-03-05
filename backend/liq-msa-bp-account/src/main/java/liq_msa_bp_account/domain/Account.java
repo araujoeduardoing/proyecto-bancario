@@ -14,6 +14,7 @@ public class Account {
     private BigDecimal initialBalance;
     private Boolean status;
     private Long clientId;
+    private String name;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

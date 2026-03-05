@@ -39,9 +39,23 @@ public class AccountPersistence implements AccountRepository {
 
     @Override
     public List<Account> findAll() {
-        return jpaRepository.findAll()
+        return jpaRepository.findAllWithPersonName()
                 .stream()
-                .map(accountMapper::accountEntityToAccountDomain)
+                .map(this::mapToAccountWithName)
                 .collect(Collectors.toList());
+    }
+    
+    private Account mapToAccountWithName(Object[] result) {
+        Account account = new Account();
+        account.setId((Long) result[0]);
+        account.setAccountNumber((String) result[1]);
+        account.setAccountType((String) result[2]);
+        account.setInitialBalance((java.math.BigDecimal) result[3]);
+        account.setStatus((Boolean) result[4]);
+        account.setClientId((Long) result[5]);
+        account.setName((String) result[6]);
+        account.setCreatedAt((java.time.LocalDateTime) result[7]);
+        account.setUpdatedAt((java.time.LocalDateTime) result[8]);
+        return account;
     }
 }

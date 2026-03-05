@@ -17,6 +17,7 @@
             <th>Cliente</th>
             <th>Número de Cuenta</th>
             <th>Tipo</th>
+            <th>Saldo Inicial</th>
             <th>Monto</th>
             <th>Saldo Disponible</th>
             <th>Estado</th>
@@ -31,6 +32,9 @@
               <td>{{ movimiento.clientName }}</td>
               <td>{{ movimiento.accountNumber }}</td>
               <td>{{ getMovimientoTypeLabel(movimiento.movementType) }}</td>
+              <td class="monto">
+                {{ formatAmount(movimiento.initialBalance) }}
+              </td>
               <td class="monto">
                 {{ formatAmount(movimiento.amount) }}
               </td>

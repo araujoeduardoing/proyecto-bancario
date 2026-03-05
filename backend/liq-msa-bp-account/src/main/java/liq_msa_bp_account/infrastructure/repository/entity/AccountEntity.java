@@ -31,6 +31,10 @@ public class AccountEntity {
     @Column(name = "client_id", nullable = false)
     private Long clientId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", insertable = false, updatable = false)
+    private CustomerEntity customer;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
