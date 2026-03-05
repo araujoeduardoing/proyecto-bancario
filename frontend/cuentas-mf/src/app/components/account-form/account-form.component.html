@@ -46,17 +46,30 @@
         </div>
 
         <div class="form-group">
-          <label for="clientId">ID del Cliente*:</label>
-          <input
+          <label for="clientId">Cliente*:</label>
+          <select
             id="clientId"
-            type="number"
-            min="1"
-            [value]="formData().clientId"
-            (input)="updateField('clientId', +$any($event.target).value)"
-            placeholder="ID del cliente propietario"
+            (change)="updateField('clientId', +$any($event.target).value)"
             required
-            [class.error]="!isFieldValid('clientId')"
-          />
+            [class.error]="formData().clientId === 0 && !loadingClients()"
+            [disabled]="loadingClients()"
+          >
+            <option value="0" disabled [selected]="formData().clientId === 0">
+              {{
+                loadingClients()
+                  ? "Cargando clientes..."
+                  : "Seleccione un cliente"
+              }}
+            </option>
+            @for (client of clients(); track client.clientId) {
+              <option
+                [value]="client.clientId"
+                [selected]="formData().clientId === client.clientId"
+              >
+                {{ client.name }} - {{ client.identification }}
+              </option>
+            }
+          </select>
         </div>
 
         <div class="form-group checkbox-group">

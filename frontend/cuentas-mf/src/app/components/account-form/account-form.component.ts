@@ -5,10 +5,14 @@ import {
   signal,
   effect,
   input,
+  inject,
+  OnInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Account } from '../../models/account.model';
 import { AccountFormData } from '../../models/account.dto';
+import { Client } from '../../models/client.model';
+import { ClientService } from '../../services/client.service';
 
 @Component({
   selector: 'app-account-form',
@@ -16,7 +20,7 @@ import { AccountFormData } from '../../models/account.dto';
   templateUrl: './account-form.component.html',
   styleUrl: './account-form.component.scss',
 })
-export class AccountFormComponent {
+export class AccountFormComponent implements OnInit {
   // Reactive inputs using input() signals
   isVisible = input<boolean>(false);
   isEditing = input<boolean>(false);
@@ -25,6 +29,13 @@ export class AccountFormComponent {
 
   @Output() submitForm = new EventEmitter<AccountFormData>();
   @Output() cancel = new EventEmitter<void>();
+
+  // Services
+  private readonly clientService = inject(ClientService);
+
+  // Client data
+  clients = signal<Client[]>([]);
+  loadingClients = signal(false);
 
   formData = signal<AccountFormData>({
     accountNumber: '',
@@ -56,6 +67,23 @@ export class AccountFormComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.loadClients();
+  }
+
+  loadClients(): void {
+    this.loadingClients.set(true);
+    this.clientService.getAll().subscribe({
+      next: (clients) => {
+        this.clients.set(clients.filter((client) => client.status));
+        this.loadingClients.set(false);
+      },
+      error: () => {
+        this.loadingClients.set(false);
+      },
+    });
+  }
+
   updateField(field: keyof AccountFormData, value: any): void {
     this.formData.update((data) => ({ ...data, [field]: value }));
   }
@@ -84,6 +112,14 @@ export class AccountFormComponent {
       clientId: 0,
       status: true,
     });
+  }
+
+  getSelectedClientName(): string {
+    const clientId = this.formData().clientId;
+    if (clientId === 0) return '';
+
+    const client = this.clients().find((c) => c.clientId === clientId);
+    return client ? client.name : '';
   }
 
   isFieldValid(field: keyof AccountFormData): boolean {
