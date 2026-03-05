@@ -1,0 +1,161 @@
+server:
+  port: ${SERVER_PORT:${PORT:4103}}
+
+spring:
+  application:
+    name: liq-msa-bp-movements
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:default}
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 60000
+      validation-timeout: 5000
+      maximum-pool-size: 5
+      minimum-idle: 2
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      auto-commit: false
+      connection-test-query: SELECT 1
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+        order_updates: true
+        order_inserts: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+          batch_size: 10
+    open-in-view: false
+  transaction:
+    default-timeout: 30
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:*}
+  #allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:4200,https://savanna-green.cloud,https://www.savanna-green.cloud}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.springframework.transaction: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
+    org.hibernate.engine.transaction: INFO
+    org.springframework.orm.jpa: INFO
+    org.springframework.jdbc: INFO
+    org.hibernate.stat: INFO
+
+---
+# Configuración para perfil dev local
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/savanna_db_dev
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 60000
+      validation-timeout: 5000
+      maximum-pool-size: 5
+      minimum-idle: 2
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      auto-commit: false
+      connection-test-query: SELECT 1
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+        order_updates: true
+        order_inserts: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+          batch_size: 10
+    open-in-view: false
+
+---
+# Configuración para perfil Docker
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    # Use environment-provided JDBC URL when running in Docker (set in docker-compose)
+    url: jdbc:postgresql://localhost:5432/savanna_db_dev
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 60000
+      validation-timeout: 5000
+      maximum-pool-size: 5
+      minimum-idle: 2
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      auto-commit: false
+      connection-test-query: SELECT 1
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        show_sql: false
+        use_sql_comments: false
+        order_updates: true
+        order_inserts: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+          batch_size: 10
+    open-in-view: false
+
+logging:
+  level:
+    org.springframework.transaction: INFO
+    org.hibernate.SQL: INFO
+    org.springframework.orm.jpa: INFO
+    root: INFO
