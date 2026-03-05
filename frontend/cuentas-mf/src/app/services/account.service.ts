@@ -16,7 +16,7 @@ export class AccountService {
   }
 
   create(account: CreateAccountDto): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/accounts`, account);
+    return this.http.post<any>(`${this.baseUrl}/accounts/create`, account);
   }
 
   update(id: number, account: UpdateAccountDto): Observable<any> {

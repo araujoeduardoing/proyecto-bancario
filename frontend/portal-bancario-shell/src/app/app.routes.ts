@@ -21,6 +21,15 @@ export const routes: Routes = [
       }).then((m) => m.App),
   },
   {
+    path: 'cuentas',
+    loadComponent: () =>
+      loadRemoteModule({
+        type: 'module',
+        remoteEntry: 'http://localhost:4202/remoteEntry.js',
+        exposedModule: './Component',
+      }).then((m) => m.App),
+  },
+  {
     path: '**',
     redirectTo: '/home',
   },
