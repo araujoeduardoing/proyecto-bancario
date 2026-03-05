@@ -1,0 +1,63 @@
+<div class="movimiento-list">
+  @if (loading) {
+    <div class="loading">Cargando movimientos...</div>
+  }
+
+  @if (!loading && movimientos.length === 0) {
+    <div class="no-movimientos">No hay movimientos registrados</div>
+  }
+
+  @if (!loading && movimientos.length > 0) {
+    <div class="movimientos-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Número de Movimiento</th>
+            <th>Tipo</th>
+            <th>Monto</th>
+            <th>Cliente ID</th>
+            <th>Fecha Creación</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (movimiento of movimientos; track movimiento.id) {
+            <tr>
+              <td>{{ movimiento.id }}</td>
+              <td>{{ movimiento.numeroMovimiento }}</td>
+              <td>{{ getMovimientoTypeLabel(movimiento.tipoMovimiento) }}</td>
+              <td class="monto">
+                {{ formatMonto(movimiento.monto) }}
+              </td>
+              <td>Cliente #{{ movimiento.clientId }}</td>
+              <td>{{ movimiento.createdAt | date: "dd/MM/yyyy" }}</td>
+              <td>
+                <span [class]="movimiento.status ? 'active' : 'inactive'">
+                  {{ movimiento.status ? "Activo" : "Inactivo" }}
+                </span>
+              </td>
+              <td class="actions">
+                <button
+                  (click)="onEditMovimiento(movimiento)"
+                  class="btn btn-primary"
+                  [disabled]="isDeleting(movimiento.id)"
+                >
+                  Editar
+                </button>
+                <button
+                  (click)="onDeleteMovimiento(movimiento)"
+                  class="btn btn-danger"
+                  [disabled]="isDeleting(movimiento.id)"
+                >
+                  {{ isDeleting(movimiento.id) ? "Eliminando..." : "Eliminar" }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}

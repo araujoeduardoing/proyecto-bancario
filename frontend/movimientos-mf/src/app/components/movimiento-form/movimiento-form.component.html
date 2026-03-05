@@ -1,0 +1,120 @@
+@if (isVisible()) {
+  <div class="movimiento-form">
+    <div class="form-container">
+      <h3>
+        {{ isEditing() ? "Editar Movimiento" : "Crear Nuevo Movimiento" }}
+      </h3>
+
+      <form (ngSubmit)="onSubmit()" #movimientoForm="ngForm">
+        <div class="form-group">
+          <label for="numeroMovimiento">Número de Movimiento*:</label>
+          <input
+            id="numeroMovimiento"
+            type="text"
+            [value]="formData().numeroMovimiento"
+            (input)="updateField('numeroMovimiento', $any($event.target).value)"
+            placeholder="Número de movimiento"
+            required
+            [class.error]="!isFieldValid('numeroMovimiento')"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="tipoMovimiento">Tipo de Movimiento:</label>
+          <select
+            id="tipoMovimiento"
+            [value]="formData().tipoMovimiento"
+            (change)="updateField('tipoMovimiento', $any($event.target).value)"
+          >
+            @for (type of movimientoTypes; track type.value) {
+              <option [value]="type.value">{{ type.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="monto">Monto*:</label>
+          <input
+            id="monto"
+            type="number"
+            step="0.01"
+            min="0"
+            [value]="formData().monto"
+            (input)="updateField('monto', +$any($event.target).value)"
+            placeholder="0.00"
+            required
+            [class.error]="!isFieldValid('monto')"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="clientId">Cliente*:</label>
+          <select
+            id="clientId"
+            (change)="updateField('clientId', +$any($event.target).value)"
+            required
+            [class.error]="formData().clientId === 0 && !loadingClients()"
+            [disabled]="loadingClients()"
+          >
+            <option value="0" disabled [selected]="formData().clientId === 0">
+              {{
+                loadingClients()
+                  ? "Cargando clientes..."
+                  : "Seleccione un cliente"
+              }}
+            </option>
+            @for (client of clients(); track client.clientId) {
+              <option
+                [value]="client.clientId"
+                [selected]="formData().clientId === client.clientId"
+              >
+                {{ client.name }} - {{ client.identification }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label>
+            <input
+              type="checkbox"
+              [checked]="formData().status"
+              (change)="updateField('status', $any($event.target).checked)"
+            />
+            Movimiento activo
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="
+              isSubmitting() ||
+              !isFieldValid('numeroMovimiento') ||
+              !isFieldValid('clientId') ||
+              !isFieldValid('monto')
+            "
+          >
+            {{
+              isSubmitting()
+                ? "Guardando..."
+                : isEditing()
+                  ? "Actualizar"
+                  : "Crear"
+            }}
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="onCancel()"
+            [disabled]="isSubmitting()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
