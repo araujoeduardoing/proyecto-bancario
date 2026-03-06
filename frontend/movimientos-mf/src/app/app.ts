@@ -32,6 +32,7 @@ export class App implements OnInit {
   protected editing = signal(false);
   protected editingMovimiento = signal<Movimiento | null>(null);
   protected deleting = signal<number | null>(null);
+  protected resetForm = signal(false);
 
   // Computed values
   protected filteredMovimientos = computed(() => {
@@ -85,6 +86,8 @@ export class App implements OnInit {
   onShowCreateForm(): void {
     this.editing.set(false);
     this.editingMovimiento.set(null);
+    this.resetForm.set(true); // Reset form when opening for create
+    setTimeout(() => this.resetForm.set(false), 100);
     this.showForm.set(true);
   }
 
@@ -109,6 +112,8 @@ export class App implements OnInit {
     operation.subscribe({
       next: () => {
         this.creating.set(false);
+        this.resetForm.set(true); // Trigger form reset
+        setTimeout(() => this.resetForm.set(false), 100); // Reset the trigger
         this.closeForm();
         this.loadMovimientos();
       },

@@ -38,6 +38,7 @@
     [isVisible]="showForm()"
     [isEditing]="editing()"
     [isSubmitting]="creating()"
+    [shouldReset]="resetForm()"
     [movimientoToEdit]="editingMovimiento()"
     (submitForm)="onFormSubmit($event)"
     (cancel)="onFormCancel()"

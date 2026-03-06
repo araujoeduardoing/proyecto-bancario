@@ -28,6 +28,7 @@ export class MovimientoFormComponent implements OnInit {
   isVisible = input<boolean>(false);
   isEditing = input<boolean>(false);
   isSubmitting = input<boolean>(false);
+  shouldReset = input<boolean>(false);
   movimientoToEdit = input<Movimiento | null>(null);
 
   @Output() submitForm = new EventEmitter<MovimientoFormData>();
@@ -81,6 +82,13 @@ export class MovimientoFormComponent implements OnInit {
         }
       }
     });
+
+    // Effect to reset form when shouldReset changes
+    effect(() => {
+      if (this.shouldReset()) {
+        this.resetForm();
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -107,7 +115,35 @@ export class MovimientoFormComponent implements OnInit {
     if (field === 'clientId' && value > 0) {
       this.loadAccountsByClient(value);
       // Reset account selection when client changes
-      this.formData.update((data) => ({ ...data, accountId: 0 }));
+      this.formData.update((data) => ({
+        ...data,
+        accountId: 0,
+        initialBalance: 0,
+        availableBalance: 0,
+      }));
+    }
+
+    // Auto-fill initial balance when account is selected
+    if (field === 'accountId' && value > 0) {
+      const selectedAccount = this.accounts().find(
+        (account) => account.id === value,
+      );
+      if (selectedAccount) {
+        this.formData.update((data) => ({
+          ...data,
+          initialBalance: selectedAccount.initialBalance,
+          availableBalance: selectedAccount.initialBalance + data.amount,
+        }));
+      }
+    }
+
+    // Recalculate available balance when amount changes
+    if (field === 'amount') {
+      const currentData = this.formData();
+      this.formData.update((data) => ({
+        ...data,
+        availableBalance: data.initialBalance + value,
+      }));
     }
   }
 
@@ -118,7 +154,6 @@ export class MovimientoFormComponent implements OnInit {
     if (
       data.clientId <= 0 ||
       data.accountId <= 0 ||
-      data.amount < 0 ||
       data.initialBalance < 0 ||
       data.availableBalance < 0
     ) {
@@ -175,15 +210,14 @@ export class MovimientoFormComponent implements OnInit {
     if (field === 'clientId' || field === 'accountId') {
       return data[field] > 0;
     }
-    if (
-      field === 'amount' ||
-      field === 'initialBalance' ||
-      field === 'availableBalance'
-    ) {
+    if (field === 'initialBalance' || field === 'availableBalance') {
       return data[field] >= 0;
     }
     if (field === 'movementType') {
       return !!data[field];
+    }
+    if (field === 'amount') {
+      return true; // Amount can be any number (positive or negative)
     }
     return true;
   }
