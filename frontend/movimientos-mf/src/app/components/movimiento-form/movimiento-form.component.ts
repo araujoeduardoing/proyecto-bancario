@@ -56,11 +56,6 @@ export class MovimientoFormComponent implements OnInit {
     movementStatus: 'ACTIVE',
   });
 
-  movimientoTypes = [
-    { value: 'DEPOSITO', label: 'Depósito' },
-    { value: 'RETIRO', label: 'Retiro' },
-  ];
-
   constructor() {
     // Effect to populate form when editing
     effect(() => {
@@ -226,9 +221,6 @@ export class MovimientoFormComponent implements OnInit {
     }
     if (field === 'initialBalance' || field === 'availableBalance') {
       return data[field] >= 0;
-    }
-    if (field === 'movementType') {
-      return !!data[field];
     }
     if (field === 'amount') {
       return true; // Amount can be any number (positive or negative)

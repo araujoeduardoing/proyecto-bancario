@@ -3,6 +3,7 @@ package liq_msa_bp_account.infrastructure.input.adapter.rest.impl;
 import liq_msa_bp_account.application.input.port.AccountService;
 import liq_msa_bp_account.domain.Account;
 import liq_msa_bp_account.infrastructure.exception.AccountNotFoundException;
+import liq_msa_bp_account.infrastructure.input.adapter.rest.bean.AccountPatchRequest;
 import liq_msa_bp_account.infrastructure.input.adapter.rest.bean.AccountRequest;
 import liq_msa_bp_account.infrastructure.repository.mapper.AccountMapper;
 import lombok.RequiredArgsConstructor;
@@ -74,6 +75,24 @@ public class AccountController {
         return ResponseEntity.ok(updatedAccount);
     }
 
+    @PatchMapping("/{id:[0-9]+}")
+    @Operation(summary = "Update account balance")
+    public ResponseEntity<Account> updateAccountBalance(@PathVariable Long id,
+                                                       @Valid @RequestBody AccountPatchRequest request) {
+        // Primero verificar que la cuenta existe
+        Optional<Account> existingAccountOpt = accountService.findById(id);
+        if (existingAccountOpt.isEmpty()) {
+            throw new AccountNotFoundException("Account not found with ID: " + id);
+        }
+        
+        Account existingAccount = existingAccountOpt.get();
+        
+        // Solo actualizar el balance inicial (updatedAt se actualiza automáticamente por @PreUpdate)
+        existingAccount.setInitialBalance(request.getInitialBalance());
+        
+        Account updatedAccount = accountService.save(existingAccount);
+        return ResponseEntity.ok(updatedAccount);
+    }
     @DeleteMapping("/{id:[0-9]+}")
     @Operation(summary = "Delete account")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
