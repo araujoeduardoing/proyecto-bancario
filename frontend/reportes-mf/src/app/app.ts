@@ -132,7 +132,9 @@ export class App implements OnInit {
             </tr>
           </thead>
           <tbody>
-            ${movements.map(movement => `
+            ${movements
+              .map(
+                (movement) => `
               <tr>
                 <td>${new Date(movement.movementDate).toLocaleString('es-EC')}</td>
                 <td>${movement.accountNumber}</td>
@@ -146,7 +148,9 @@ export class App implements OnInit {
                 <td class="balance">$${movement.availableBalance.toFixed(2)}</td>
                 <td>${movement.movementStatus === 'ACTIVE' ? 'Activo' : movement.movementStatus}</td>
               </tr>
-            `).join('')}
+            `,
+              )
+              .join('')}
           </tbody>
         </table>
 

@@ -8,6 +8,7 @@ module.exports = withModuleFederationPlugin({
 
   remotes: {
     "clientes-mf": "clientes-mf@http://localhost:4201/remoteEntry.js",
+    "reportes-mf": "reportes-mf@http://localhost:4204/remoteEntry.js",
   },
 
   shared: {
