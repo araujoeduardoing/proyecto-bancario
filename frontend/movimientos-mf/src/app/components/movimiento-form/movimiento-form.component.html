@@ -47,20 +47,6 @@
         </div>
 
         <div class="form-group">
-          <label for="accountId">ID de la Cuenta*:</label>
-          <input
-            id="accountId"
-            type="number"
-            min="1"
-            [value]="formData().accountId"
-            (input)="updateField('accountId', +$any($event.target).value)"
-            placeholder="ID de la cuenta"
-            required
-            [class.error]="!isFieldValid('accountId')"
-          />
-        </div>
-
-        <div class="form-group">
           <label for="clientId">Cliente*:</label>
           <select
             id="clientId"
@@ -82,6 +68,38 @@
                 [selected]="formData().clientId === client.clientId"
               >
                 {{ client.name }} - {{ client.identification }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="accountId">Cuenta*:</label>
+          <select
+            id="accountId"
+            (change)="updateField('accountId', +$any($event.target).value)"
+            required
+            [class.error]="formData().accountId === 0 && !loadingAccounts()"
+            [disabled]="loadingAccounts() || formData().clientId === 0"
+          >
+            <option value="0" disabled [selected]="formData().accountId === 0">
+              {{
+                loadingAccounts()
+                  ? "Cargando cuentas..."
+                  : formData().clientId === 0
+                    ? "Seleccione primero un cliente"
+                    : "Seleccione una cuenta"
+              }}
+            </option>
+            @for (account of accounts(); track account.id) {
+              <option
+                [value]="account.id"
+                [selected]="formData().accountId === account.id"
+              >
+                {{ account.accountNumber }} -
+                {{ account.accountType | titlecase }} ({{
+                  account.initialBalance | currency
+                }})
               </option>
             }
           </select>

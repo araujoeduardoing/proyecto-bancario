@@ -6,6 +6,7 @@ import {
   CreateMovimientoDto,
   UpdateMovimientoDto,
 } from '../models/movimiento.dto';
+import { Account } from '../models/account.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,5 +32,11 @@ export class MovimientoService {
 
   delete(id: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/movimientos/${id}`);
+  }
+
+  getAccountsByClientId(clientId: number): Observable<Account[]> {
+    return this.http.get<Account[]>(
+      `http://localhost:4102/business/retail/v1/accounts/client/${clientId}`,
+    );
   }
 }

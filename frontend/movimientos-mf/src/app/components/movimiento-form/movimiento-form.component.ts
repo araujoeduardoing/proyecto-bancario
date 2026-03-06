@@ -9,15 +9,17 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { Movimiento } from '../../models/movimiento.model';
 import { MovimientoFormData } from '../../models/movimiento.dto';
 import { Client } from '../../models/client.model';
+import { Account } from '../../models/account.model';
 import { ClientService } from '../../services/client.service';
+import { MovimientoService } from '../../services/movimiento.service';
 
 @Component({
   selector: 'app-movimiento-form',
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, DatePipe, CurrencyPipe, TitleCasePipe],
   templateUrl: './movimiento-form.component.html',
   styleUrl: './movimiento-form.component.scss',
 })
@@ -33,10 +35,15 @@ export class MovimientoFormComponent implements OnInit {
 
   // Services
   private readonly clientService = inject(ClientService);
+  private readonly movimientoService = inject(MovimientoService);
 
   // Client data
   clients = signal<Client[]>([]);
   loadingClients = signal(false);
+
+  // Account data
+  accounts = signal<Account[]>([]);
+  loadingAccounts = signal(false);
 
   formData = signal<MovimientoFormData>({
     movementDate: new Date().toISOString(),
@@ -67,6 +74,11 @@ export class MovimientoFormComponent implements OnInit {
           amount: movimiento.amount,
           movementStatus: movimiento.movementStatus,
         });
+
+        // Load accounts for the selected client when editing
+        if (movimiento.clientId > 0) {
+          this.loadAccountsByClient(movimiento.clientId);
+        }
       }
     });
   }
@@ -90,6 +102,13 @@ export class MovimientoFormComponent implements OnInit {
 
   updateField(field: keyof MovimientoFormData, value: any): void {
     this.formData.update((data) => ({ ...data, [field]: value }));
+
+    // Load accounts when client changes
+    if (field === 'clientId' && value > 0) {
+      this.loadAccountsByClient(value);
+      // Reset account selection when client changes
+      this.formData.update((data) => ({ ...data, accountId: 0 }));
+    }
   }
 
   onSubmit(): void {
@@ -113,6 +132,22 @@ export class MovimientoFormComponent implements OnInit {
     this.cancel.emit();
   }
 
+  loadAccountsByClient(clientId: number): void {
+    this.loadingAccounts.set(true);
+    this.accounts.set([]);
+
+    this.movimientoService.getAccountsByClientId(clientId).subscribe({
+      next: (accounts) => {
+        this.accounts.set(accounts.filter((account) => account.status));
+        this.loadingAccounts.set(false);
+      },
+      error: () => {
+        this.accounts.set([]);
+        this.loadingAccounts.set(false);
+      },
+    });
+  }
+
   private resetForm(): void {
     this.formData.set({
       movementDate: new Date().toISOString(),
@@ -122,6 +157,7 @@ export class MovimientoFormComponent implements OnInit {
       amount: 0,
       movementStatus: 'ACTIVE',
     });
+    this.accounts.set([]);
   }
 
   getSelectedClientName(): string {
