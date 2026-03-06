@@ -1,0 +1,648 @@
+{
+	"info": {
+		"_postman_id": "50346449-bee1-41ec-a1a0-0e690b790f03",
+		"name": "Banco Pichincha Micros",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Clientes",
+			"item": [
+				{
+					"name": "Crear Cliente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Eduardo Araujo\",\n  \"identification\": \"1720477346\",\n  \"password\": \"1234567\",\n  \"gender\": \"M\",\n  \"age\": 35,\n  \"address\": \"Quito, Ecuador\",\n  \"phone\": \"0999999999\",\n  \"status\": true\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4101/business/retail/v1/customers/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4101",
+							"path": [
+								"business",
+								"retail",
+								"v1",
+								"customers",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Crear Cliente",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Eduardo Araujo\",\n  \"identification\": \"1720477346\",\n  \"password\": \"1234567\",\n  \"gender\": \"M\",\n  \"age\": 35,\n  \"address\": \"Quito, Ecuador\",\n  \"phone\": \"0999999999\",\n  \"status\": true\n}"
+								},
+								"url": {
+									"raw": "http://localhost:4101/business/retail/v1/customers/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4101",
+									"path": [
+										"business",
+										"retail",
+										"v1",
+										"customers",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Mar 2026 21:07:01 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"personId\": 4,\n    \"name\": \"Eduardo Araujo\",\n    \"gender\": \"M\",\n    \"age\": 35,\n    \"identification\": \"1720477346\",\n    \"address\": \"Quito, Ecuador\",\n    \"phone\": \"0999999999\",\n    \"clientId\": 4,\n    \"password\": \"1234567\",\n    \"status\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Consutlar Clientes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Eduardo Araujo\",\n  \"identification\": \"1720477346\",\n  \"password\": \"1234567\",\n  \"gender\": \"M\",\n  \"age\": 35,\n  \"address\": \"Quito, Ecuador\",\n  \"phone\": \"0999999999\",\n  \"status\": true\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4101/business/retail/v1/customers/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4101",
+							"path": [
+								"business",
+								"retail",
+								"v1",
+								"customers",
+								"all"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Consutlar Clientes",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Eduardo Araujo\",\n  \"identification\": \"1720477346\",\n  \"password\": \"1234567\",\n  \"gender\": \"M\",\n  \"age\": 35,\n  \"address\": \"Quito, Ecuador\",\n  \"phone\": \"0999999999\",\n  \"status\": true\n}"
+								},
+								"url": {
+									"raw": "http://localhost:4101/business/retail/v1/customers/all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4101",
+									"path": [
+										"business",
+										"retail",
+										"v1",
+										"customers",
+										"all"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Mar 2026 21:30:10 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"personId\": 1,\n        \"name\": \"Jose Lema\",\n        \"gender\": null,\n        \"age\": null,\n        \"identification\": \"1234567890\",\n        \"address\": \"Otavalo sn y principal\",\n        \"phone\": \"098254785\",\n        \"clientId\": 1,\n        \"password\": \"1234\",\n        \"status\": true\n    },\n    {\n        \"personId\": 2,\n        \"name\": \"Marianela Montalvo\",\n        \"gender\": null,\n        \"age\": null,\n        \"identification\": \"0987654321\",\n        \"address\": \"Amazonas y NNUU\",\n        \"phone\": \"097548965\",\n        \"clientId\": 2,\n        \"password\": \"5678\",\n        \"status\": true\n    },\n    {\n        \"personId\": 3,\n        \"name\": \"Juan Osorio\",\n        \"gender\": null,\n        \"age\": null,\n        \"identification\": \"1122334455\",\n        \"address\": \"13 junio y Equinoccial\",\n        \"phone\": \"098874587\",\n        \"clientId\": 3,\n        \"password\": \"1245\",\n        \"status\": true\n    },\n    {\n        \"personId\": 4,\n        \"name\": \"Eduardo Araujo\",\n        \"gender\": \"M\",\n        \"age\": 35,\n        \"identification\": \"1720477346\",\n        \"address\": \"Quito, Ecuador\",\n        \"phone\": \"0999999999\",\n        \"clientId\": 4,\n        \"password\": \"1234567\",\n        \"status\": true\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Modificar Cliente",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Eduardo Araujo Modificado\",\n  \"identification\": \"1720477346\",\n  \"password\": \"Password456\",\n  \"gender\": \"M\",\n  \"age\": 35,\n  \"address\": \"Av. Amazonas 123, Quito\",\n  \"phone\": \"0999888777\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4101/business/retail/v1/customers/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4101",
+							"path": [
+								"business",
+								"retail",
+								"v1",
+								"customers",
+								"4"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Modificar Cliente",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Eduardo Araujo Modificado\",\n  \"identification\": \"1720477346\",\n  \"password\": \"Password456\",\n  \"gender\": \"M\",\n  \"age\": 35,\n  \"address\": \"Av. Amazonas 123, Quito\",\n  \"phone\": \"0999888777\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:4101/business/retail/v1/customers/4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4101",
+									"path": [
+										"business",
+										"retail",
+										"v1",
+										"customers",
+										"4"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Mar 2026 21:32:23 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"personId\": 4,\n    \"name\": \"Eduardo Araujo Modificado\",\n    \"gender\": \"M\",\n    \"age\": 35,\n    \"identification\": \"1720477346\",\n    \"address\": \"Av. Amazonas 123, Quito\",\n    \"phone\": \"0999888777\",\n    \"clientId\": 4,\n    \"password\": \"Password456\",\n    \"status\": null\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Cuentas",
+			"item": [
+				{
+					"name": "Crear Cuenta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountNumber\": \"585545\",\n    \"accountType\": \"Corriente\", \n    \"initialBalance\": 1000,\n    \"status\": true,\n    \"clientId\": 4\n  }"
+						},
+						"url": {
+							"raw": "http://localhost:4102/business/retail/v1/accounts/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4102",
+							"path": [
+								"business",
+								"retail",
+								"v1",
+								"accounts",
+								"create"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Crear Cuenta",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"accountNumber\": \"585545\",\n    \"accountType\": \"Corriente\", \n    \"initialBalance\": 1000,\n    \"status\": true,\n    \"clientId\": 4\n  }"
+								},
+								"url": {
+									"raw": "http://localhost:4102/business/retail/v1/accounts/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4102",
+									"path": [
+										"business",
+										"retail",
+										"v1",
+										"accounts",
+										"create"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Mar 2026 21:52:06 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 5,\n    \"accountNumber\": \"585545\",\n    \"accountType\": \"Corriente\",\n    \"initialBalance\": 1000,\n    \"status\": true,\n    \"clientId\": 4,\n    \"name\": null,\n    \"createdAt\": \"2026-03-06T21:52:01.481339715\",\n    \"updatedAt\": \"2026-03-06T21:52:01.481396327\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Consulta Cuentas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountNumber\": \"585545\",\n    \"accountType\": \"Corriente\", \n    \"initialBalance\": 1000,\n    \"status\": true,\n    \"clientId\": 4\n  }"
+						},
+						"url": {
+							"raw": "http://localhost:4102/business/retail/v1/accounts/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4102",
+							"path": [
+								"business",
+								"retail",
+								"v1",
+								"accounts",
+								"all"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Consulta Cuentas",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"accountNumber\": \"585545\",\n    \"accountType\": \"Corriente\", \n    \"initialBalance\": 1000,\n    \"status\": true,\n    \"clientId\": 4\n  }"
+								},
+								"url": {
+									"raw": "http://localhost:4102/business/retail/v1/accounts/all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4102",
+									"path": [
+										"business",
+										"retail",
+										"v1",
+										"accounts",
+										"all"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Mar 2026 21:52:41 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"accountNumber\": \"478758\",\n        \"accountType\": \"Ahorro\",\n        \"initialBalance\": 2000,\n        \"status\": true,\n        \"clientId\": 1,\n        \"name\": \"Jose Lema\",\n        \"createdAt\": \"2026-03-06T10:10:38.562578\",\n        \"updatedAt\": \"2026-03-06T10:10:38.562578\"\n    },\n    {\n        \"id\": 4,\n        \"accountNumber\": \"496825\",\n        \"accountType\": \"Ahorros\",\n        \"initialBalance\": 540,\n        \"status\": true,\n        \"clientId\": 2,\n        \"name\": \"Marianela Montalvo\",\n        \"createdAt\": \"2026-03-06T10:10:38.562578\",\n        \"updatedAt\": \"2026-03-06T10:10:38.562578\"\n    },\n    {\n        \"id\": 2,\n        \"accountNumber\": \"225487\",\n        \"accountType\": \"Corriente\",\n        \"initialBalance\": 100,\n        \"status\": true,\n        \"clientId\": 2,\n        \"name\": \"Marianela Montalvo\",\n        \"createdAt\": \"2026-03-06T10:10:38.562578\",\n        \"updatedAt\": \"2026-03-06T10:10:38.562578\"\n    },\n    {\n        \"id\": 3,\n        \"accountNumber\": \"495878\",\n        \"accountType\": \"Ahorros\",\n        \"initialBalance\": 0,\n        \"status\": true,\n        \"clientId\": 3,\n        \"name\": \"Juan Osorio\",\n        \"createdAt\": \"2026-03-06T10:10:38.562578\",\n        \"updatedAt\": \"2026-03-06T10:10:38.562578\"\n    },\n    {\n        \"id\": 5,\n        \"accountNumber\": \"585545\",\n        \"accountType\": \"Corriente\",\n        \"initialBalance\": 1000,\n        \"status\": true,\n        \"clientId\": 4,\n        \"name\": \"Eduardo Araujo Modificado\",\n        \"createdAt\": \"2026-03-06T21:52:01.48134\",\n        \"updatedAt\": \"2026-03-06T21:52:01.481396\"\n    }\n]"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Movimientos",
+			"item": [
+				{
+					"name": "http://localhost:4103/business/retail/v1/movements/register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clientId\": 1,\n    \"accountId\": 1,\n    \"movementType\": \"RETIRO\",\n    \"initialBalance\": 2000.00,\n    \"amount\": 575.00,\n    \"availableBalance\": 1425.00,\n    \"movementStatus\": \"ACTIVE\"\n  }"
+						},
+						"url": {
+							"raw": "http://localhost:4103/business/retail/v1/movements/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4103",
+							"path": [
+								"business",
+								"retail",
+								"v1",
+								"movements",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "http://localhost:4103/business/retail/v1/movements/register",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"clientId\": 1,\n    \"accountId\": 1,\n    \"movementType\": \"RETIRO\",\n    \"initialBalance\": 2000.00,\n    \"amount\": 575.00,\n    \"availableBalance\": 1425.00,\n    \"movementStatus\": \"ACTIVE\"\n  }"
+								},
+								"url": {
+									"raw": "http://localhost:4103/business/retail/v1/movements/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4103",
+									"path": [
+										"business",
+										"retail",
+										"v1",
+										"movements",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Mar 2026 22:26:57 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"movementId\": 6,\n    \"movementDate\": \"2026-03-06T22:26:44.927246454\",\n    \"clientId\": 1,\n    \"accountId\": 1,\n    \"movementType\": \"RETIRO\",\n    \"initialBalance\": 2000,\n    \"movementStatus\": \"ACTIVE\",\n    \"amount\": 575,\n    \"availableBalance\": 1425,\n    \"createdAt\": \"2026-03-06T22:26:44.970088857\",\n    \"updatedAt\": null\n}"
+						}
+					]
+				}
+			]
+		}
+	]
+}
