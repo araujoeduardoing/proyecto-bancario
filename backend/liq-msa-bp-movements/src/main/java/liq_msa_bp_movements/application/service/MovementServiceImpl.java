@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -61,5 +62,10 @@ public class MovementServiceImpl implements MovementService {
     @Override
     public List<MovementWithDetails> findByClientIdWithDetails(Long clientId) {
         return movementOutputService.findByClientIdWithDetails(clientId);
+    }
+
+    @Override
+    public List<MovementWithDetails> findAccountStatementByClientIdAndDateRange(Long clientId, LocalDate startDate, LocalDate endDate) {
+        return movementOutputService.findAccountStatementByClientIdAndDateRange(clientId, startDate, endDate);
     }
 }

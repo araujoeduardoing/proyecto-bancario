@@ -5,6 +5,7 @@ import liq_msa_bp_movements.domain.Movement;
 import liq_msa_bp_movements.domain.MovementWithDetails;
 import liq_msa_bp_movements.infrastructure.exception.MovementNotFoundException;
 import liq_msa_bp_movements.infrastructure.input.adapter.rest.bean.MovementRequest;
+import liq_msa_bp_movements.infrastructure.input.adapter.rest.bean.AccountStatementRequest;
 import liq_msa_bp_movements.infrastructure.repository.mapper.MovementMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -113,6 +114,25 @@ public class MovementController {
     @Operation(summary = "Get movements by client ID with account and client details")
     public ResponseEntity<List<MovementWithDetails>> getMovementsByClientIdWithDetails(@PathVariable Long clientId) {
         List<MovementWithDetails> movements = movementService.findByClientIdWithDetails(clientId);
+        return movements.isEmpty()
+                ? ResponseEntity.ok(List.of())
+                : ResponseEntity.ok(movements);
+    }
+
+    @PostMapping("/report")
+    @Operation(summary = "Generate account statement by client ID and date range")
+    public ResponseEntity<List<MovementWithDetails>> getAccountStatement(@Valid @RequestBody AccountStatementRequest request) {
+        
+        if (request.getStartDate().isAfter(request.getEndDate())) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin");
+        }
+        
+        List<MovementWithDetails> movements = movementService.findAccountStatementByClientIdAndDateRange(
+            request.getClientId(), 
+            request.getStartDate(), 
+            request.getEndDate()
+        );
+        
         return movements.isEmpty()
                 ? ResponseEntity.ok(List.of())
                 : ResponseEntity.ok(movements);

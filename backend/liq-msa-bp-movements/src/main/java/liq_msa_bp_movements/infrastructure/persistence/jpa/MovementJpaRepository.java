@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -68,4 +69,33 @@ public interface MovementJpaRepository extends JpaRepository<MovementEntity, Lon
         ORDER BY m.movementDate DESC
         """)    
     List<Object[]> findMovementsWithDetailsByClientId(@Param("clientId") Long clientId);
+    
+    @Query("""
+        SELECT 
+            m.movementId,
+            m.movementDate,
+            m.clientId,
+            m.accountId,
+            m.movementType,
+            m.initialBalance,
+            m.movementStatus,
+            m.amount,
+            m.availableBalance,
+            m.createdAt,
+            m.updatedAt,
+            a.accountNumber,
+            p.name
+        FROM MovementEntity m
+        JOIN m.account a
+        JOIN m.customer c
+        JOIN c.person p
+        WHERE m.clientId = :clientId 
+        AND DATE(m.movementDate) >= :startDate 
+        AND DATE(m.movementDate) <= :endDate
+        ORDER BY m.movementDate DESC
+        """)
+    List<Object[]> findAccountStatementByClientIdAndDateRange(
+        @Param("clientId") Long clientId, 
+        @Param("startDate") LocalDate startDate, 
+        @Param("endDate") LocalDate endDate);
 }

@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,5 +94,10 @@ public class MovementAdapter implements MovementOutputService {
     @Override
     public List<MovementWithDetails> findByClientIdWithDetails(Long clientId) {
         return movementRepository.findByClientIdWithDetails(clientId);
+    }
+
+    @Override
+    public List<MovementWithDetails> findAccountStatementByClientIdAndDateRange(Long clientId, LocalDate startDate, LocalDate endDate) {
+        return movementRepository.findAccountStatementByClientIdAndDateRange(clientId, startDate, endDate);
     }
 }

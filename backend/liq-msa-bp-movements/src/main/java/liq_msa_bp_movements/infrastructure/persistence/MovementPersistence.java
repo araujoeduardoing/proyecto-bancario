@@ -10,6 +10,7 @@ import liq_msa_bp_movements.infrastructure.repository.mapper.MovementDetailsMapp
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,6 +66,12 @@ public class MovementPersistence implements MovementRepository {
     @Override
     public List<MovementWithDetails> findByClientIdWithDetails(Long clientId) {
         List<Object[]> results = jpaRepository.findMovementsWithDetailsByClientId(clientId);
+        return movementDetailsMapper.mapToMovementWithDetailsList(results);
+    }
+
+    @Override
+    public List<MovementWithDetails> findAccountStatementByClientIdAndDateRange(Long clientId, LocalDate startDate, LocalDate endDate) {
+        List<Object[]> results = jpaRepository.findAccountStatementByClientIdAndDateRange(clientId, startDate, endDate);
         return movementDetailsMapper.mapToMovementWithDetailsList(results);
     }
 }
