@@ -21,7 +21,6 @@
             <th>Monto</th>
             <th>Saldo Disponible</th>
             <th>Estado</th>
-            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -55,26 +54,6 @@
                       : "Inactivo"
                   }}
                 </span>
-              </td>
-              <td class="actions">
-                <button
-                  (click)="onEditMovimiento(movimiento)"
-                  class="btn btn-primary"
-                  [disabled]="isDeleting(movimiento.movementId)"
-                >
-                  Editar
-                </button>
-                <button
-                  (click)="onDeleteMovimiento(movimiento)"
-                  class="btn btn-danger"
-                  [disabled]="isDeleting(movimiento.movementId)"
-                >
-                  {{
-                    isDeleting(movimiento.movementId)
-                      ? "Eliminando..."
-                      : "Eliminar"
-                  }}
-                </button>
               </td>
             </tr>
           }
