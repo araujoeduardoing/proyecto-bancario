@@ -1,0 +1,130 @@
+version: "3.8"
+
+networks:
+  banco-pichincha-network:
+    driver: bridge
+
+services:
+  # Microservicio de Clientes
+  liq-msa-bp-customer:
+    build:
+      context: ./backend/liq-msa-bp-customer
+      dockerfile: Dockerfile
+    container_name: liq-msa-bp-customer
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SERVER_PORT: 4101
+      SPRING_PROFILES_ACTIVE: default
+    ports:
+      - "4101:4101"
+    networks:
+      - banco-pichincha-network
+    restart: unless-stopped
+
+  # Microservicio de Cuentas
+  liq-msa-bp-account:
+    build:
+      context: ./backend/liq-msa-bp-account
+      dockerfile: Dockerfile
+    container_name: liq-msa-bp-account
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SERVER_PORT: 4102
+      SPRING_PROFILES_ACTIVE: default
+    ports:
+      - "4102:4102"
+    networks:
+      - banco-pichincha-network
+    restart: unless-stopped
+
+  # Microservicio de Movimientos
+  liq-msa-bp-movements:
+    build:
+      context: ./backend/liq-msa-bp-movements
+      dockerfile: Dockerfile
+    container_name: liq-msa-bp-movements
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SERVER_PORT: 4103
+      SPRING_PROFILES_ACTIVE: default
+    ports:
+      - "4103:4103"
+    networks:
+      - banco-pichincha-network
+    restart: unless-stopped
+
+  # Portal Bancario Shell (Aplicación Principal)
+  portal-bancario-shell:
+    build:
+      context: ./frontend/portal-bancario-shell
+      dockerfile: Dockerfile
+    container_name: portal-bancario-shell
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "4200:4200"
+    networks:
+      - banco-pichincha-network
+    restart: unless-stopped
+
+  # Microfrontend de Clientes
+  clientes-mf:
+    build:
+      context: ./frontend/clientes-mf
+      dockerfile: Dockerfile
+    container_name: clientes-mf
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "4201:4201"
+    networks:
+      - banco-pichincha-network
+    restart: unless-stopped
+
+  # Microfrontend de Cuentas
+  cuentas-mf:
+    build:
+      context: ./frontend/cuentas-mf
+      dockerfile: Dockerfile
+    container_name: cuentas-mf
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "4202:4202"
+    networks:
+      - banco-pichincha-network
+    restart: unless-stopped
+
+  # Microfrontend de Movimientos
+  movimientos-mf:
+    build:
+      context: ./frontend/movimientos-mf
+      dockerfile: Dockerfile
+    container_name: movimientos-mf
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "4203:4203"
+    networks:
+      - banco-pichincha-network
+    restart: unless-stopped
+
+  # Microfrontend de Reportes
+  reportes-mf:
+    build:
+      context: ./frontend/reportes-mf
+      dockerfile: Dockerfile
+    container_name: reportes-mf
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "4204:4204"
+    networks:
+      - banco-pichincha-network
+    restart: unless-stopped

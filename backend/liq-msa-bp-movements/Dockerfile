@@ -11,6 +11,9 @@ COPY src/ src/
 # Dar permisos de ejecución al gradlew
 RUN chmod +x gradlew
 
+# Configurar variables para resolver problemas SSL/DNS
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.parallel=false -Djava.net.useSystemProxies=true"
+
 # Construir la aplicación
 RUN ./gradlew build -x test --no-daemon --no-parallel
 
