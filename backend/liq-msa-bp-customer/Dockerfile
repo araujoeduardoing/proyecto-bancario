@@ -1,4 +1,4 @@
-# Dockerfile para ea-msa-payments
+# Dockerfile para liq-msa-bp-customer
 FROM gradle:8.5-jdk17 AS build
 
 # Copiar archivos de configuración de Gradle
@@ -28,20 +28,20 @@ RUN groupadd --system --gid 1001 appgroup && \
 WORKDIR /app
 
 # Copiar el JAR de la aplicación desde la etapa de build
-COPY --from=build --chown=appuser:appgroup /home/gradle/build/libs/savanna-isp-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build --chown=appuser:appgroup /home/gradle/build/libs/liq-msa-bp-customer-0.0.1-SNAPSHOT.jar app.jar
 
 # Cambiar al usuario sin privilegios
 USER appuser
 
 # Exponer el puerto
-EXPOSE 8086
+EXPOSE 4101
 
 # Variables de entorno por defecto
 ENV JAVA_OPTS="-Xmx512m -Xms256m"
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:8086/actuator/health || exit 1
+  CMD curl -f http://localhost:4101/actuator/health || exit 1
 
 # Comando para ejecutar la aplicación
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar app.jar"]
