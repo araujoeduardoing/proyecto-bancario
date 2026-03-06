@@ -21,7 +21,7 @@ export class MovimientoService {
 
   create(movimiento: CreateMovimientoDto): Observable<any> {
     return this.http.post<any>(
-      `${this.baseUrl}/movimientos/create`,
+      `${this.baseUrl}/movements/register`,
       movimiento,
     );
   }

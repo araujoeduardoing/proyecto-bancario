@@ -6,45 +6,6 @@
       </h3>
 
       <form (ngSubmit)="onSubmit()" #movimientoForm="ngForm">
-        <div class="form-group">
-          <label for="movementDate">Fecha del Movimiento*:</label>
-          <input
-            id="movementDate"
-            type="datetime-local"
-            [value]="formatDateForInput(formData().movementDate)"
-            (input)="updateField('movementDate', $any($event.target).value)"
-            required
-            [class.error]="!isFieldValid('movementDate')"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="movementType">Tipo de Movimiento:</label>
-          <select
-            id="movementType"
-            [value]="formData().movementType"
-            (change)="updateField('movementType', $any($event.target).value)"
-          >
-            @for (type of movimientoTypes; track type.value) {
-              <option [value]="type.value">{{ type.label }}</option>
-            }
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="amount">Monto*:</label>
-          <input
-            id="amount"
-            type="number"
-            step="0.01"
-            min="0"
-            [value]="formData().amount"
-            (input)="updateField('amount', +$any($event.target).value)"
-            placeholder="0.00"
-            required
-            [class.error]="!isFieldValid('amount')"
-          />
-        </div>
 
         <div class="form-group">
           <label for="clientId">Cliente*:</label>
@@ -105,6 +66,68 @@
           </select>
         </div>
 
+
+        <div class="form-group">
+          <label for="movementType">Tipo de Movimiento:</label>
+          <select
+            id="movementType"
+            [value]="formData().movementType"
+            (change)="updateField('movementType', $any($event.target).value)"
+          >
+            @for (type of movimientoTypes; track type.value) {
+              <option [value]="type.value">{{ type.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="initialBalance">Balance Inicial*:</label>
+          <input
+            id="initialBalance"
+            type="number"
+            step="0.01"
+            min="0"
+            [value]="formData().initialBalance"
+            (input)="updateField('initialBalance', +$any($event.target).value)"
+            placeholder="0.00"
+            required
+            [class.error]="!isFieldValid('initialBalance')"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="amount">Monto*:</label>
+          <input
+            id="amount"
+            type="number"
+            step="0.01"
+            min="0"
+            [value]="formData().amount"
+            (input)="updateField('amount', +$any($event.target).value)"
+            placeholder="0.00"
+            required
+            [class.error]="!isFieldValid('amount')"
+          />
+        </div>
+     
+        <div class="form-group">
+          <label for="availableBalance">Balance Disponible*:</label>
+          <input
+            id="availableBalance"
+            type="number"
+            step="0.01"
+            min="0"
+            [value]="formData().availableBalance"
+            (input)="
+              updateField('availableBalance', +$any($event.target).value)
+            "
+            placeholder="0.00"
+            required
+            [class.error]="!isFieldValid('availableBalance')"
+          />
+        </div>
+
+
         <div class="form-group">
           <label for="movementStatus">Estado del Movimiento:</label>
           <select
@@ -123,10 +146,11 @@
             class="btn btn-primary"
             [disabled]="
               isSubmitting() ||
-              !isFieldValid('movementDate') ||
               !isFieldValid('clientId') ||
               !isFieldValid('accountId') ||
-              !isFieldValid('amount')
+              !isFieldValid('amount') ||
+              !isFieldValid('initialBalance') ||
+              !isFieldValid('availableBalance')
             "
           >
             {{

@@ -46,17 +46,16 @@ export class MovimientoFormComponent implements OnInit {
   loadingAccounts = signal(false);
 
   formData = signal<MovimientoFormData>({
-    movementDate: new Date().toISOString(),
     clientId: 0,
     accountId: 0,
     movementType: 'AHORROS',
+    initialBalance: 0,
     amount: 0,
+    availableBalance: 0,
     movementStatus: 'ACTIVE',
   });
 
   movimientoTypes = [
-    { value: 'AHORROS', label: 'Ahorros' },
-    { value: 'CORRIENTE', label: 'Corriente' },
     { value: 'DEPOSITO', label: 'Depósito' },
     { value: 'RETIRO', label: 'Retiro' },
   ];
@@ -67,11 +66,12 @@ export class MovimientoFormComponent implements OnInit {
       const movimiento = this.movimientoToEdit();
       if (movimiento && this.isEditing()) {
         this.formData.set({
-          movementDate: movimiento.movementDate,
           clientId: movimiento.clientId,
           accountId: movimiento.accountId,
           movementType: movimiento.movementType,
+          initialBalance: movimiento.initialBalance || 0,
           amount: movimiento.amount,
+          availableBalance: movimiento.availableBalance || 0,
           movementStatus: movimiento.movementStatus,
         });
 
@@ -116,10 +116,11 @@ export class MovimientoFormComponent implements OnInit {
 
     // Basic validation
     if (
-      !data.movementDate ||
       data.clientId <= 0 ||
       data.accountId <= 0 ||
-      data.amount < 0
+      data.amount < 0 ||
+      data.initialBalance < 0 ||
+      data.availableBalance < 0
     ) {
       return;
     }
@@ -150,11 +151,12 @@ export class MovimientoFormComponent implements OnInit {
 
   private resetForm(): void {
     this.formData.set({
-      movementDate: new Date().toISOString(),
       clientId: 0,
       accountId: 0,
       movementType: 'AHORROS',
+      initialBalance: 0,
       amount: 0,
+      availableBalance: 0,
       movementStatus: 'ACTIVE',
     });
     this.accounts.set([]);
@@ -170,24 +172,19 @@ export class MovimientoFormComponent implements OnInit {
 
   isFieldValid(field: keyof MovimientoFormData): boolean {
     const data = this.formData();
-    if (field === 'movementDate') {
-      return !!data[field];
-    }
     if (field === 'clientId' || field === 'accountId') {
       return data[field] > 0;
     }
-    if (field === 'amount') {
+    if (
+      field === 'amount' ||
+      field === 'initialBalance' ||
+      field === 'availableBalance'
+    ) {
       return data[field] >= 0;
     }
     if (field === 'movementType') {
       return !!data[field];
     }
     return true;
-  }
-
-  formatDateForInput(dateString: string): string {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toISOString().slice(0, 16);
   }
 }
