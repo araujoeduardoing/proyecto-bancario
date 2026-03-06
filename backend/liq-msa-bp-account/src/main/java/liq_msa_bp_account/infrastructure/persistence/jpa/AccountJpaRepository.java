@@ -24,4 +24,7 @@ public interface AccountJpaRepository extends JpaRepository<AccountEntity, Long>
            "JOIN c.person p")
     List<Object[]> findAllWithPersonName();
     
+    // Buscar cuentas por ID de cliente
+    List<AccountEntity> findByClientId(Long clientId);
+    
 }

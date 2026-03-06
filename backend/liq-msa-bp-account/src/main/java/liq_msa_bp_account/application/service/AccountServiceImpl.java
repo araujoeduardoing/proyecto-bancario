@@ -38,4 +38,9 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> findAll() {
         return accountOutputService.findAll();
     }
+    
+    @Override
+    public List<Account> findByClientId(Long clientId) {
+        return accountOutputService.findByClientId(clientId);
+    }
 }

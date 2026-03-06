@@ -33,4 +33,9 @@ public class AccountAdapter implements AccountOutputService {
     public List<Account> findAll() {
         return accountRepository.findAll();
     }
+    
+    @Override
+    public List<Account> findByClientId(Long clientId) {
+        return accountRepository.findByClientId(clientId);
+    }
 }

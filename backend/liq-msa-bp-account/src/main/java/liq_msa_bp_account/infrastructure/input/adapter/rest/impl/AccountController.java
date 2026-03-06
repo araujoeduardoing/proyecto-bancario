@@ -89,5 +89,14 @@ public class AccountController {
                 ? ResponseEntity.ok(List.of())
                 : ResponseEntity.ok(accounts);
     }
+    
+    @GetMapping("/client/{clientId:[0-9]+}")
+    @Operation(summary = "Get accounts by client ID")
+    public ResponseEntity<List<Account>> getAccountByClientId(@PathVariable Long clientId) {
+        List<Account> accounts = accountService.findByClientId(clientId);
+        return accounts.isEmpty()
+                ? ResponseEntity.ok(List.of()) 
+                : ResponseEntity.ok(accounts);
+    }
 
 }

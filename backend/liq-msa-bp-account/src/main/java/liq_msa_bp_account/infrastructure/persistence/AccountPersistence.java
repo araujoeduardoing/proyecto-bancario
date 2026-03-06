@@ -45,6 +45,14 @@ public class AccountPersistence implements AccountRepository {
                 .collect(Collectors.toList());
     }
     
+    @Override
+    public List<Account> findByClientId(Long clientId) {
+        return jpaRepository.findByClientId(clientId)
+                .stream()
+                .map(accountMapper::accountEntityToAccountDomain)
+                .collect(Collectors.toList());
+    }
+    
     private Account mapToAccountWithName(Object[] result) {
         Account account = new Account();
         account.setId((Long) result[0]);
