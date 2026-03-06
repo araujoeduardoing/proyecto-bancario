@@ -1,10 +1,3 @@
--- =====================================================
--- SCRIPT DE CREACIÓN DE BASE DE DATOS - PostgreSQL
--- Sistema: Customer Management Service  
--- Estrategia: JOINED Inheritance (Tablas separadas)
--- =====================================================
-
--- Eliminar tablas si existen (para recrear)
 DROP TABLE IF EXISTS customer CASCADE;
 DROP TABLE IF EXISTS person CASCADE;
 

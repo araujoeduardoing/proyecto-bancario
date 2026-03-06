@@ -1,0 +1,76 @@
+.report-list {
+  .loading,
+  .no-reports {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-style: italic;
+  }
+
+  .reports-table {
+    overflow-x: auto;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+
+      th,
+      td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        font-size: 0.875rem;
+        white-space: nowrap;
+
+        &:first-child {
+          width: 60px; // ID column
+        }
+      }
+
+      th {
+        background-color: #f5f5f5;
+        font-weight: 600;
+        color: #333;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      tr:hover {
+        background-color: #f9f9f9;
+      }
+    }
+  }
+
+  .active {
+    color: #28a745;
+    font-weight: 500;
+  }
+
+  .inactive {
+    color: #dc3545;
+    font-weight: 500;
+  }
+
+  .balance {
+    font-weight: 600;
+    color: #28a745;
+    text-align: right;
+    font-family: monospace;
+  }
+
+  // Responsivo para pantallas pequeñas
+  @media (max-width: 768px) {
+    .reports-table {
+      table {
+        font-size: 0.75rem;
+
+        th,
+        td {
+          padding: 0.5rem 0.25rem;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+<div class="report-list">
+  @if (loading) {
+    <div class="loading">Cargando reportes...</div>
+  }
+
+  @if (!loading && reports.length === 0) {
+    <div class="no-reports">No hay reportes disponibles</div>
+  }
+
+  @if (!loading && reports.length > 0) {
+    <div class="reports-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tipo de Reporte</th>
+            <th>Título</th>
+            <th>Número de Cuenta</th>
+            <th>Tipo de Cuenta</th>
+            <th>Saldo</th>
+            <th>Cliente</th>
+            <th>Transacciones</th>
+            <th>Última Transacción</th>
+            <th>Fecha Generado</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (report of reports; track report.id) {
+            <tr>
+              <td>{{ report.id }}</td>
+              <td>{{ getReportTypeLabel(report.reportType) }}</td>
+              <td>{{ report.reportTitle }}</td>
+              <td>{{ report.accountNumber }}</td>
+              <td>{{ getAccountTypeLabel(report.accountType) }}</td>
+              <td class="balance">
+                {{ formatBalance(report.balance) }}
+              </td>
+              <td>{{ report.clientName }}</td>
+              <td>{{ report.transactionCount }}</td>
+              <td>{{ report.lastTransaction | date: "dd/MM/yyyy HH:mm" }}</td>
+              <td>{{ report.generatedAt | date: "dd/MM/yyyy HH:mm" }}</td>
+              <td>
+                <span [class]="report.status ? 'active' : 'inactive'">
+                  {{ report.status ? "Activo" : "Inactivo" }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

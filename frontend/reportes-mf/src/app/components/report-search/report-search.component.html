@@ -1,0 +1,65 @@
+<div class="report-search">
+  <div class="search-container">
+    <div class="search-filters">
+      <div class="search-input-group">
+        <input
+          type="text"
+          [value]="searchText"
+          (input)="onSearchInput($any($event.target).value)"
+          placeholder="Buscar por número de cuenta, cliente o título..."
+          class="search-input"
+        />
+      </div>
+
+      <div class="filter-group">
+        <select
+          [value]="reportType"
+          (change)="onReportTypeChange($any($event.target).value)"
+          class="filter-select"
+        >
+          @for (type of reportTypes; track type.value) {
+            <option [value]="type.value">{{ type.label }}</option>
+          }
+        </select>
+
+        <select
+          [value]="accountType"
+          (change)="onAccountTypeChange($any($event.target).value)"
+          class="filter-select"
+        >
+          @for (type of accountTypes; track type.value) {
+            <option [value]="type.value">{{ type.label }}</option>
+          }
+        </select>
+      </div>
+
+      @if (hasActiveSearch()) {
+        <button
+          (click)="onClearSearch()"
+          class="clear-button"
+          title="Limpiar filtros"
+        >
+          Limpiar filtros
+        </button>
+      }
+    </div>
+
+    @if (totalReports > 0) {
+      <div class="search-info">
+        <span class="results-count">
+          {{ hasActiveSearch() ? filteredReports : totalReports }}
+          de {{ totalReports }} reporte{{ totalReports === 1 ? "" : "s" }}
+        </span>
+
+        @if (hasActiveSearch()) {
+          <span class="search-hint">
+            Filtros activos
+            @if (searchText) { - Búsqueda: "{{ searchText }}" }
+            @if (reportType) { - Tipo de reporte }
+            @if (accountType) { - Tipo de cuenta }
+          </span>
+        }
+      </div>
+    }
+  </div>
+</div>
