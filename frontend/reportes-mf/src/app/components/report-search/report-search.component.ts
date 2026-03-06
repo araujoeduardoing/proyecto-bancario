@@ -1,6 +1,16 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ReportFilterDto } from '../../models/report.dto';
+import { MovementReportRequest } from '../../models/report.dto';
+import { ClientService } from '../../services/client.service';
+import { Client } from '../../models/client.model';
 
 @Component({
   selector: 'app-report-search',
@@ -8,54 +18,70 @@ import { ReportFilterDto } from '../../models/report.dto';
   templateUrl: './report-search.component.html',
   styleUrl: './report-search.component.scss',
 })
-export class ReportSearchComponent {
-  @Input() searchText: string = '';
-  @Input() reportType: string = '';
-  @Input() accountType: string = '';
-  @Input() totalReports: number = 0;
-  @Input() filteredReports: number = 0;
+export class ReportSearchComponent implements OnInit {
+  @Input() loading: boolean = false;
+  @Input() totalMovements: number = 0;
 
-  @Output() searchChange = new EventEmitter<string>();
-  @Output() reportTypeChange = new EventEmitter<string>();
-  @Output() accountTypeChange = new EventEmitter<string>();
-  @Output() clearSearch = new EventEmitter<void>();
+  @Output() generateReport = new EventEmitter<MovementReportRequest>();
 
-  reportTypes = [
-    { value: '', label: 'Todos los tipos' },
-    { value: 'balance', label: 'Reporte de Saldos' },
-    { value: 'transactions', label: 'Reporte de Transacciones' },
-    { value: 'monthly', label: 'Reporte Mensual' },
-    { value: 'client', label: 'Reporte por Cliente' },
-  ];
+  // Services
+  private readonly clientService = inject(ClientService);
 
-  accountTypes = [
-    { value: '', label: 'Todos los tipos de cuenta' },
-    { value: 'savings', label: 'Cuenta de Ahorros' },
-    { value: 'checking', label: 'Cuenta Corriente' },
-    { value: 'fixed_deposit', label: 'Depósito a Plazo' },
-  ];
+  // Client data
+  clients = signal<Client[]>([]);
+  loadingClients = signal(false);
 
-  onSearchInput(value: string): void {
-    this.searchChange.emit(value);
+  clientId: number | null = null;
+  startDate: string = '';
+  endDate: string = '';
+
+  constructor() {
+    // Set default dates (last month)
+    const today = new Date();
+    const lastMonth = new Date();
+    lastMonth.setMonth(today.getMonth() - 1);
+
+    this.endDate = today.toISOString().split('T')[0];
+    this.startDate = lastMonth.toISOString().split('T')[0];
   }
 
-  onReportTypeChange(value: string): void {
-    this.reportTypeChange.emit(value);
+  ngOnInit(): void {
+    this.loadClients();
   }
 
-  onAccountTypeChange(value: string): void {
-    this.accountTypeChange.emit(value);
+  loadClients(): void {
+    this.loadingClients.set(true);
+    this.clientService.getAll().subscribe({
+      next: (clients) => {
+        this.clients.set(clients.filter((client) => client.status));
+        this.loadingClients.set(false);
+      },
+      error: () => {
+        this.loadingClients.set(false);
+      },
+    });
   }
 
-  onClearSearch(): void {
-    this.clearSearch.emit();
+  onGenerateReport(): void {
+    if (!this.clientId || !this.startDate || !this.endDate) {
+      return;
+    }
+
+    if (new Date(this.startDate) > new Date(this.endDate)) {
+      alert('La fecha de inicio debe ser menor o igual a la fecha de fin');
+      return;
+    }
+
+    const request: MovementReportRequest = {
+      clientId: this.clientId,
+      startDate: this.startDate,
+      endDate: this.endDate,
+    };
+
+    this.generateReport.emit(request);
   }
 
-  hasActiveSearch(): boolean {
-    return (
-      this.searchText.length > 0 ||
-      this.reportType.length > 0 ||
-      this.accountType.length > 0
-    );
+  isValidForm(): boolean {
+    return !!(this.clientId && this.startDate && this.endDate);
   }
 }

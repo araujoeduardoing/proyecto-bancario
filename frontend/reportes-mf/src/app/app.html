@@ -1,34 +1,25 @@
 <div class="app-container">
   <header class="app-header">
     <h1>{{ title() }}</h1>
-    <button
-      (click)="onRefreshReports()"
-      class="btn btn-primary"
-      [disabled]="loading()"
-    >
-      {{ loading() ? "Actualizando..." : "Actualizar Reportes" }}
-    </button>
+    <div class="header-info">
+      <span class="version">v2.0 - Consulta de Movimientos</span>
+    </div>
   </header>
 
   @if (error()) {
     <div class="error-message">
-      {{ error() }}
+      <span>{{ error() }}</span>
+      <button (click)="onClearError()" class="close-error">✕</button>
     </div>
   }
 
   <app-report-search
-    [searchText]="searchText()"
-    [reportType]="reportTypeFilter()"
-    [accountType]="accountTypeFilter()"
-    [totalReports]="reports().length"
-    [filteredReports]="filteredReports().length"
-    (searchChange)="onSearchChange($event)"
-    (reportTypeChange)="onReportTypeChange($event)"
-    (accountTypeChange)="onAccountTypeChange($event)"
-    (clearSearch)="onClearSearch()"
+    [loading]="loading()"
+    [totalMovements]="movements().length"
+    (generateReport)="onGenerateReport($event)"
   >
   </app-report-search>
 
-  <app-report-list [reports]="filteredReports()" [loading]="loading()">
+  <app-report-list [movements]="movements()" [loading]="loading()">
   </app-report-list>
 </div>

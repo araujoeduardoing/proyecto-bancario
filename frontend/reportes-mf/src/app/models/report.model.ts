@@ -1,14 +1,15 @@
-export interface Report {
-  id: number;
-  reportType: string;
-  reportTitle: string;
-  accountNumber: string;
-  accountType: string;
-  balance: number;
+export interface MovementReport {
+  movementId: number;
+  movementDate: string;
   clientId: number;
+  accountId: number;
+  movementType: string;
+  initialBalance: number;
+  movementStatus: string;
+  amount: number;
+  availableBalance: number;
+  createdAt: string;
+  updatedAt: string | null;
+  accountNumber: string;
   clientName: string;
-  transactionCount: number;
-  lastTransaction: string;
-  status: boolean;
-  generatedAt: string;
 }

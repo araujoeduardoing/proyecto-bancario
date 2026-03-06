@@ -1,48 +1,74 @@
-<div class="report-list">
+<div class="movement-report">
   @if (loading) {
-    <div class="loading">Cargando reportes...</div>
+    <div class="loading">Generando reporte de movimientos...</div>
   }
 
-  @if (!loading && reports.length === 0) {
-    <div class="no-reports">No hay reportes disponibles</div>
+  @if (!loading && movements.length === 0) {
+    <div class="no-movements">
+      <p>No hay movimientos para mostrar</p>
+      <small
+        >Seleccione un cliente y rango de fechas para generar el reporte</small
+      >
+    </div>
   }
 
-  @if (!loading && reports.length > 0) {
-    <div class="reports-table">
+  @if (!loading && movements.length > 0) {
+    <div class="movements-summary">
+      <h3>Reporte de Movimientos</h3>
+      <p><strong>Cliente:</strong> {{ movements[0].clientName }}</p>
+      <p><strong>Total de movimientos:</strong> {{ movements.length }}</p>
+    </div>
+
+    <div class="movements-table">
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Tipo de Reporte</th>
-            <th>Título</th>
-            <th>Número de Cuenta</th>
-            <th>Tipo de Cuenta</th>
-            <th>Saldo</th>
-            <th>Cliente</th>
-            <th>Transacciones</th>
-            <th>Última Transacción</th>
-            <th>Fecha Generado</th>
+            <th>Fecha</th>
+            <th>Cuenta</th>
+            <th>Tipo</th>
+            <th>Saldo Inicial</th>
+            <th>Monto</th>
+            <th>Saldo Final</th>
             <th>Estado</th>
           </tr>
         </thead>
         <tbody>
-          @for (report of reports; track report.id) {
+          @for (movement of movements; track movement.movementId) {
             <tr>
-              <td>{{ report.id }}</td>
-              <td>{{ getReportTypeLabel(report.reportType) }}</td>
-              <td>{{ report.reportTitle }}</td>
-              <td>{{ report.accountNumber }}</td>
-              <td>{{ getAccountTypeLabel(report.accountType) }}</td>
-              <td class="balance">
-                {{ formatBalance(report.balance) }}
-              </td>
-              <td>{{ report.clientName }}</td>
-              <td>{{ report.transactionCount }}</td>
-              <td>{{ report.lastTransaction | date: "dd/MM/yyyy HH:mm" }}</td>
-              <td>{{ report.generatedAt | date: "dd/MM/yyyy HH:mm" }}</td>
+              <td>{{ movement.movementDate | date: "dd/MM/yyyy HH:mm" }}</td>
+              <td>{{ movement.accountNumber }}</td>
               <td>
-                <span [class]="report.status ? 'active' : 'inactive'">
-                  {{ report.status ? "Activo" : "Inactivo" }}
+                <span [class]="getMovementTypeClass(movement.movementType)">
+                  {{ getMovementTypeLabel(movement.movementType) }}
+                </span>
+              </td>
+              <td class="balance">
+                {{
+                  movement.initialBalance | currency: "USD" : "symbol" : "1.2-2"
+                }}
+              </td>
+              <td
+                [class]="
+                  movement.amount >= 0 ? 'amount-positive' : 'amount-negative'
+                "
+              >
+                {{ formatAmount(movement.amount) }}
+              </td>
+              <td class="balance final">
+                {{
+                  movement.availableBalance
+                    | currency: "USD" : "symbol" : "1.2-2"
+                }}
+              </td>
+              <td>
+                <span
+                  [class]="
+                    movement.movementStatus === 'ACTIVE'
+                      ? 'status-active'
+                      : 'status-inactive'
+                  "
+                >
+                  {{ getStatusLabel(movement.movementStatus) }}
                 </span>
               </td>
             </tr>

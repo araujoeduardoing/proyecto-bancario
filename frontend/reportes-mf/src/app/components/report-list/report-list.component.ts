@@ -1,40 +1,48 @@
 import { Component, Input } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { Report } from '../../models/report.model';
+import { DatePipe, CurrencyPipe } from '@angular/common';
+import { MovementReport } from '../../models/report.model';
 
 @Component({
   selector: 'app-report-list',
-  imports: [DatePipe],
+  imports: [DatePipe, CurrencyPipe],
   templateUrl: './report-list.component.html',
   styleUrl: './report-list.component.scss',
 })
 export class ReportListComponent {
-  @Input() reports: Report[] = [];
+  @Input() movements: MovementReport[] = [];
   @Input() loading: boolean = false;
 
-  getReportTypeLabel(type: string): string {
+  getMovementTypeLabel(type: string): string {
     const types: Record<string, string> = {
-      balance: 'Reporte de Saldos',
-      transactions: 'Reporte de Transacciones',
-      monthly: 'Reporte Mensual',
-      client: 'Reporte por Cliente',
+      DEPOSITO: 'Depósito',
+      RETIRO: 'Retiro',
+      TRANSFERENCIA: 'Transferencia',
     };
     return types[type] || type;
   }
 
-  getAccountTypeLabel(type: string): string {
-    const types: Record<string, string> = {
-      savings: 'Ahorros',
-      checking: 'Corriente',
-      fixed_deposit: 'Depósito a Plazo',
+  getMovementTypeClass(type: string): string {
+    const classes: Record<string, string> = {
+      DEPOSITO: 'movement-deposit',
+      RETIRO: 'movement-withdrawal',
+      TRANSFERENCIA: 'movement-transfer',
     };
-    return types[type] || type;
+    return classes[type] || 'movement-default';
   }
 
-  formatBalance(balance: number): string {
+  getStatusLabel(status: string): string {
+    const statuses: Record<string, string> = {
+      ACTIVE: 'Activo',
+      INACTIVE: 'Inactivo',
+      PENDING: 'Pendiente',
+    };
+    return statuses[status] || status;
+  }
+
+  formatAmount(amount: number): string {
     return new Intl.NumberFormat('es-EC', {
       style: 'currency',
       currency: 'USD',
-    }).format(balance);
+    }).format(Math.abs(amount));
   }
 }

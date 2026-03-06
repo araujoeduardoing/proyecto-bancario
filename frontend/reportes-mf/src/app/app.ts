@@ -1,6 +1,6 @@
-import { Component, signal, inject, OnInit, computed } from '@angular/core';
-import { Report } from './models/report.model';
-import { ReportFilterDto } from './models/report.dto';
+import { Component, signal, inject, OnInit } from '@angular/core';
+import { MovementReport } from './models/report.model';
+import { MovementReportRequest } from './models/report.dto';
 import { ReportService } from './services/report.service';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { ReportListComponent } from './components/report-list/report-list.component';
@@ -13,89 +13,52 @@ import { ReportSearchComponent } from './components/report-search/report-search.
   styleUrl: './app.scss',
 })
 export class App implements OnInit {
-  protected readonly title = signal('Sistema de Reportes Bancarios');
+  protected readonly title = signal(
+    'Sistema de Reportes de Movimientos Bancarios',
+  );
 
-  // Report data
-  protected reports = signal<Report[]>([]);
-  protected searchText = signal('');
-  protected reportTypeFilter = signal('');
-  protected accountTypeFilter = signal('');
+  // Movement data
+  protected movements = signal<MovementReport[]>([]);
 
   // UI State
   protected loading = signal(false);
   protected error = signal<string | null>(null);
-
-  // Computed values
-  protected filteredReports = computed(() => {
-    const search = this.searchText().toLowerCase();
-    const reportType = this.reportTypeFilter();
-    const accountType = this.accountTypeFilter();
-
-    if (!search && !reportType && !accountType) {
-      return this.reports();
-    }
-
-    return this.reports().filter((report) => {
-      const matchesSearch =
-        !search ||
-        report.accountNumber.toLowerCase().includes(search) ||
-        report.reportTitle.toLowerCase().includes(search) ||
-        report.clientName.toLowerCase().includes(search);
-
-      const matchesReportType = !reportType || report.reportType === reportType;
-      const matchesAccountType =
-        !accountType || report.accountType === accountType;
-
-      return matchesSearch && matchesReportType && matchesAccountType;
-    });
-  });
 
   // Services
   private readonly reportService = inject(ReportService);
   private readonly errorHandler = inject(ErrorHandlerService);
 
   ngOnInit(): void {
-    this.loadReports();
+    // Initialize with empty movements
+    this.movements.set([]);
   }
 
-  // Report operations
-  loadReports(): void {
+  // Generate movement report
+  onGenerateReport(request: MovementReportRequest): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.reportService.getAllReports().subscribe({
-      next: (reports) => {
-        this.reports.set(reports);
+    this.reportService.generateMovementReport(request).subscribe({
+      next: (movements) => {
+        this.movements.set(movements);
         this.loading.set(false);
+
+        if (movements.length === 0) {
+          this.error.set(
+            'No se encontraron movimientos para el cliente y período seleccionado',
+          );
+        }
       },
       error: (err) => {
         this.error.set(this.errorHandler.handleHttpError(err, 'load'));
         this.loading.set(false);
+        this.movements.set([]);
       },
     });
   }
 
-  // Search operations
-  onSearchChange(value: string): void {
-    this.searchText.set(value);
-  }
-
-  onReportTypeChange(value: string): void {
-    this.reportTypeFilter.set(value);
-  }
-
-  onAccountTypeChange(value: string): void {
-    this.accountTypeFilter.set(value);
-  }
-
-  onClearSearch(): void {
-    this.searchText.set('');
-    this.reportTypeFilter.set('');
-    this.accountTypeFilter.set('');
-  }
-
-  // Refresh operation
-  onRefreshReports(): void {
-    this.loadReports();
+  // Clear error message
+  onClearError(): void {
+    this.error.set(null);
   }
 }
