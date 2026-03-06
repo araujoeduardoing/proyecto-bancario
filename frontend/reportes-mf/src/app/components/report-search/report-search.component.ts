@@ -23,6 +23,7 @@ export class ReportSearchComponent implements OnInit {
   @Input() totalMovements: number = 0;
 
   @Output() generateReport = new EventEmitter<MovementReportRequest>();
+  @Output() downloadPdf = new EventEmitter<void>();
 
   // Services
   private readonly clientService = inject(ClientService);
@@ -79,6 +80,10 @@ export class ReportSearchComponent implements OnInit {
     };
 
     this.generateReport.emit(request);
+  }
+
+  onDownloadPdf(): void {
+    this.downloadPdf.emit();
   }
 
   isValidForm(): boolean {

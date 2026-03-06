@@ -46,18 +46,30 @@
       </div>
 
       <div class="form-group button-group">
-        <button
-          (click)="onGenerateReport()"
-          [disabled]="!isValidForm() || loading"
-          class="generate-btn"
-        >
-          @if (loading) {
-            <span class="loading-spinner"></span>
-            Generando...
-          } @else {
-            📊 Generar Reporte
+        <div class="button-container">
+          <button
+            (click)="onGenerateReport()"
+            [disabled]="!isValidForm() || loading"
+            class="generate-btn"
+          >
+            @if (loading) {
+              <span class="loading-spinner"></span>
+              Generando...
+            } @else {
+              📊 Generar Reporte
+            }
+          </button>
+          
+          @if (totalMovements > 0 && !loading) {
+            <button
+              (click)="onDownloadPdf()"
+              class="pdf-btn"
+              title="Descargar reporte en PDF"
+            >
+              📄 Descargar PDF
+            </button>
           }
-        </button>
+        </div>
       </div>
     </div>
 
