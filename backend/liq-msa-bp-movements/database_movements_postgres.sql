@@ -8,7 +8,7 @@ CREATE TABLE movements (
     movement_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     client_id INTEGER NOT NULL,
     account_id INTEGER NOT NULL,
-    movement_type VARCHAR(50) NOT NULL CHECK (movement_type IN ('AHORROS', 'CORRIENTE')),
+    movement_type VARCHAR(50) NOT NULL CHECK (movement_type IN ('DEPOSITO', 'RETIRO')),
     initial_balance DECIMAL(15,2) NOT NULL,
     movement_status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' CHECK (movement_status IN ('ACTIVE', 'CANCELED', 'PENDING')),
     amount DECIMAL(15,2) NOT NULL,

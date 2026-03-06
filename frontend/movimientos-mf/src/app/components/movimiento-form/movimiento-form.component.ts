@@ -49,7 +49,7 @@ export class MovimientoFormComponent implements OnInit {
   formData = signal<MovimientoFormData>({
     clientId: 0,
     accountId: 0,
-    movementType: 'AHORROS',
+    movementType: 'DEPOSITO',
     initialBalance: 0,
     amount: 0,
     availableBalance: 0,
@@ -140,15 +140,22 @@ export class MovimientoFormComponent implements OnInit {
     // Recalculate available balance when amount changes
     if (field === 'amount') {
       const currentData = this.formData();
+      // Auto-set movement type based on amount
+      const movementType = value < 0 ? 'RETIRO' : 'DEPOSITO';
       this.formData.update((data) => ({
         ...data,
         availableBalance: data.initialBalance + value,
+        movementType: movementType,
       }));
     }
   }
 
   onSubmit(): void {
     const data = this.formData();
+
+    // Log para debugging - ver qué JSON se envía
+    console.log('📋 Datos del formulario a enviar:');
+    console.log(JSON.stringify(data, null, 2));
 
     // Basic validation
     if (
@@ -157,9 +164,16 @@ export class MovimientoFormComponent implements OnInit {
       data.initialBalance < 0 ||
       data.availableBalance < 0
     ) {
+      console.log('❌ Validación fallida:', {
+        clientId: data.clientId,
+        accountId: data.accountId,
+        initialBalance: data.initialBalance,
+        availableBalance: data.availableBalance,
+      });
       return;
     }
 
+    console.log('✅ Validación exitosa, enviando datos...');
     this.submitForm.emit(data);
   }
 
@@ -188,7 +202,7 @@ export class MovimientoFormComponent implements OnInit {
     this.formData.set({
       clientId: 0,
       accountId: 0,
-      movementType: 'AHORROS',
+      movementType: 'DEPOSITO',
       initialBalance: 0,
       amount: 0,
       availableBalance: 0,
