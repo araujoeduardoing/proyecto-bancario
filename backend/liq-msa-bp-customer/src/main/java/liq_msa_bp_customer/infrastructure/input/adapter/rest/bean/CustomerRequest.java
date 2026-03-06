@@ -12,7 +12,7 @@ import lombok.Setter;
 public class CustomerRequest {
     
     @NotBlank(message = "La contraseña es requerida")
-    @Size(min = 6, max = 100, message = "La contraseña debe tener entre 6 y 100 caracteres")
+    @Size(min = 4, max = 100, message = "La contraseña debe tener entre 4 y 100 caracteres")
     private String password;
     
     private Boolean status;
